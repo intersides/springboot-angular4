@@ -23,6 +23,12 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
+    //main app
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ResponseEntity<Object> getIndex(){
+        return new ResponseEntity<Object>("this should replace by the index content", HttpStatus.OK);
+    }
+
     //ITEMS COLLECTION
     @RequestMapping(value = "/items", method = RequestMethod.GET)
     public Collection<Item> getAllItems(){
