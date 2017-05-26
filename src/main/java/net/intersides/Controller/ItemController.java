@@ -5,10 +5,13 @@ import net.intersides.Service.ItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.json.simple.JSONObject;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.Collection;
 
@@ -22,12 +25,6 @@ public class ItemController {
 
     @Autowired
     private ItemService itemService;
-
-    //main app
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity<Object> getIndex(){
-        return new ResponseEntity<Object>("this should replace by the index content", HttpStatus.OK);
-    }
 
     //ITEMS COLLECTION
     @RequestMapping(value = "/items", method = RequestMethod.GET)
