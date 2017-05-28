@@ -1,0 +1,13 @@
+.list-group-item {
+  display: flex;
+  justify-content: space-around;
+  align-items: baseline; }
+  .list-group-item > * {
+    margin: 0 8px; }
+  .list-group-item code {
+    flex-grow: 2; }
+
+.description {
+  font-weight: 800; }
+
+/*# sourceMappingURL=app.css.map */
