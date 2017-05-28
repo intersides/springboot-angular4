@@ -18,7 +18,7 @@ var AppComponent = (function () {
         this.items = itemsService.fetchItems();
         this.item = this.items[0];
     }
-    AppComponent.prototype.onItemClick = function (id) {
+    AppComponent.prototype.onItemSelect = function (id) {
         var selectedItem = this.getItemIndexFromId(id);
         if (selectedItem != null) {
             this.item = selectedItem;
@@ -47,7 +47,7 @@ AppComponent = __decorate([
     core_1.Component({
         selector: 'my-app',
         providers: [items_service_1.ItemsService],
-        template: "\n        <h1>{{title}}</h1>\n        <h2>Chosen technology is :{{item.name}}</h2>\n        <p>Technologies:</p>\n        <ul class=\"list-group\">\n            <li *ngFor=\"let item of items\" class=\"list-group-item\">\n                <span>{{item.name}}</span>\n                <button class=\"btn\" (click)=\"onItemClick(item.id)\"> select me</button>\n            </li>\n        </ul>\n        <p *ngIf=\"items.length > 3\">There are many technologies!</p>\n        <div>\n            <input (keyup)=\"onKeyUp($event)\" (keyup.enter)=\"onKeyEnter($event)\" class=\"form-control\" >\n            <p>{{insertedValues}}</p>\n        </div>\n\n\n        <item-form>new form here...</item-form>\n        \n    "
+        template: "\n        <h1>{{title}}</h1>\n        <h2>Chosen technology is :{{item.name}}</h2>\n        <p>Technologies:</p>\n        <ul class=\"list-group\">\n            <li *ngFor=\"let item of items\" class=\"list-group-item\">\n                <span>{{item.name}}</span>\n                <button class=\"btn\" (click)=\"onItemSelect(item.id)\"> select me</button>\n            </li>\n        </ul>\n        <p *ngIf=\"items.length > 3\">There are many technologies!</p>\n        <div>\n            <input (keyup)=\"onKeyUp($event)\" (keyup.enter)=\"onKeyEnter($event)\" class=\"form-control\" >\n            <p>{{insertedValues}}</p>\n        </div>\n\n\n        <item-form>new form here...</item-form>\n        \n    "
     }),
     __metadata("design:paramtypes", [items_service_1.ItemsService])
 ], AppComponent);

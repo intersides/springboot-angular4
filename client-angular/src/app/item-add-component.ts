@@ -2,9 +2,10 @@
  * Created by marcofalsitta on 27.05.17.
  */
 
-import {Component, EventEmitter, Output} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {Item} from "./Item";
 import {ItemsService} from "./items.service"
+import {Subject} from "rxjs/Subject";
 
 
 @Component({
@@ -12,10 +13,13 @@ import {ItemsService} from "./items.service"
   providers:[ItemsService],
   templateUrl:"./item-add-component.html"
 })
-export class ItemFormComponent{
+export class ItemFormComponent {
 
   public model:Item;
   private submitted:boolean;
+  lockId:boolean = true;
+
+  @Input() parentSubject:Subject<any>;
 
   @Output() onItemAdded = new EventEmitter<Item>();
   @Output() onItemRemoved = new EventEmitter<Item>();
@@ -35,8 +39,14 @@ export class ItemFormComponent{
     })
   }
 
+  onSelected(selectedItem:Item){
+    this.model = new Item(selectedItem);
+
+  }
+
   newItem() {
     this.model = new Item();
   }
+
 
 }

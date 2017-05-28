@@ -1,31 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {Item} from "./Item";
 import { ItemsService } from "./items.service";
+import { ItemFormComponent } from "./item-add-component";
+import {Subject} from "rxjs/Subject";
 
 @Component({
   selector: 'my-app',
   providers:[ItemsService],
   template: `
-    <h1>{{title}}</h1>
-    <h2>Chosen technology is :{{item.name}}</h2>
-    <p>Technologies:</p>
-    <ul class="list-group">
-      <li *ngFor="let item of items" class="list-group-item">
-        <span class="name">{{item.name}} </span>
-        <span class="description">{{item.description}} </span>
-        <code>{{item.id}}</code>
-        <button class="btn" (click)="onItemClick(item.id)"> select me</button>
-        <button class="btn btn-danger" (click)="onItemRemove(item.id)"> remove me</button>
-      </li>
-    </ul>
-    <!--<p *ngIf="items.length > 3">There are many technologies!</p>-->
-    <div>
-      <input (keyup)="onKeyUp($event)" (keyup.enter)="onKeyEnter($event)" class="form-control" >
-      <p>{{insertedValues}}</p>
+    <div class="container">
+
+      <div>
+        <h1>{{title}}</h1>
+
+        <h3>{{items.length > 0 ? items.length: 'Empty'}} item{{items.length > 1 ? 's' : ''}} in the list:</h3>
+        <ul class="list-group">
+          <li *ngFor="let item of items" class="list-group-item">
+            <span class="name">{{item.name}} </span>
+            <span class="description">{{item.description}} </span>
+            <code>{{item.id}}</code>
+            <button class="btn" (click)="onItemSelect(item.id)"> select me</button>
+            <button class="btn btn-danger" (click)="onItemRemove(item.id)"> remove me</button>
+          </li>
+        </ul>
+        <!--<p *ngIf="items.length > 3">There are many items!</p>-->
+        <div>
+          <input (keyup)="onKeyUp($event)" (keyup.enter)="onKeyEnter($event)" class="form-control">
+          <p>{{insertedValues}}</p>
+        </div>
+
+      </div>
+
+
+      <div class="container" style="max-width: 500px;">
+        <item-form (onItemAdded)="onItemAdded($event)">new form here...</item-form>
+      </div>
+
+
     </div>
-
-
-    <item-form (onItemAdded)="onItemAdded($event)">new form here...</item-form>
 
   `
 })
@@ -35,22 +47,14 @@ export class AppComponent implements OnInit{
   items: Item[] = [];
   insertedValues:string;
 
+  parentSubject:Subject<any> = new Subject();
+
   constructor(private itemsService:ItemsService){
     this.title = "Fluance - Test";
   }
 
-  onItemClick(id:string){
-
-    let selectedItem = this.getItemIndexFromId(id);
-    if(selectedItem != null){
-      this.item = selectedItem;
-    }
-    else{
-      alert("could not find item form id"+id);
-    }
-  }
-
-
+  @ViewChild(ItemFormComponent)
+  private itemFormComponent: ItemFormComponent;
 
   private getItemIndexFromId(id: string): any {
 
@@ -77,10 +81,26 @@ export class AppComponent implements OnInit{
     this.refreshList();
   }
 
+  onItemSelect(id:string){
+    let selectedItem = this.getItemIndexFromId(id);
+    if(selectedItem != null){
+      this.item = selectedItem;
+      // this.parentSubject.next('some value');
+      this.itemFormComponent.onSelected(selectedItem);
+
+    }
+    else{
+      alert("could not find item form id"+id);
+    }
+  }
+
   onItemRemove(id:string){
     this.itemsService.deleteItem(id).then((removedItem:Item)=>{
       console.info("removed item ", removedItem);
       this.refreshList();
+    })
+      .catch((exception)=>{
+      console.error(exception);
     });
   }
 
@@ -98,6 +118,9 @@ export class AppComponent implements OnInit{
       this.items = items;
       this.item = this.items[0];
     })
+      .catch((exception)=>{
+      console.error(exception);
+    });
   }
 
 }

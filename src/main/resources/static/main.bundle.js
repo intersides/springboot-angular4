@@ -190,7 +190,7 @@ var AppComponent = (function () {
         this.items = [];
         this.title = "Fluance - Test";
     }
-    AppComponent.prototype.onItemClick = function (id) {
+    AppComponent.prototype.onItemSelect = function (id) {
         var selectedItem = this.getItemIndexFromId(id);
         if (selectedItem != null) {
             this.item = selectedItem;
