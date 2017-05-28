@@ -1,7 +1,7 @@
 <div class="container">
     <h2>Add Item</h2>
     <form #itemForm="ngForm" (ngSubmit)="onSubmit()">
-        <code style="white-space: pre-line;">{{diagnostic}}</code>
+        <code style="white-space: pre-line;">{{model.diagnostic}}</code>
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" class="form-control" id="name" required
@@ -21,7 +21,7 @@
         </div>
 
 
-        <button type="submit" class="btn btn-success" [disabled]="name.invalid" >Submit</button>
+        <button type="submit" class="btn btn-success" [disabled]="name.invalid">Submit</button>
         <button type="button" class="btn btn-default" (click)="newItem(); itemForm.reset()">Reset</button>
 
     </form>

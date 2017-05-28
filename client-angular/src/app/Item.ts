@@ -6,31 +6,34 @@ import { UtilityService } from "./utils/utility.service";
 
 
 interface IItem {
-    id?: string;
-    name : string;
-    description: string;
-    creationTimestamp?:Date;
+  id?: string;
+  name : string;
+  description: string;
+  creationDate?:number; //timestamps
 }
 
 export class Item{
-    id:string=null;
-    name:string=null;
-    description:string=null;
-    creationTimestamp:Date=new Date();
+  id:string=null;
+  name:string=null;
+  description:string=null;
+  creationDate:number = new Date().getTime();
 
-    constructor(iITem?:IItem){
-        this.id = UtilityService.getInstance().generateUUID();
+  constructor(iITem?:IItem){
+    this.id = UtilityService.getInstance().generateUUID();
 
-        if(iITem){
-            if(iITem.id){
-                this.id = iITem.id;
-            }
-            this.name = iITem.name;
-            this.description = iITem.description;
-            if(iITem.creationTimestamp){
-                this.creationTimestamp = iITem.creationTimestamp;
-            }
-        }
+    if(iITem){
+      if(iITem.id){
+        this.id = iITem.id;
+      }
+      this.name = iITem.name;
+      this.description = iITem.description;
+      if(iITem.creationDate){
+        this.creationDate = iITem.creationDate;
+      }
     }
+  }
 
+  get diagnostic(){
+    return JSON.stringify(this, null, "\t");
+  }
 }

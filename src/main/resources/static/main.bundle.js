@@ -1,25 +1,96 @@
 webpackJsonp([1,4],{
 
-/***/ 137:
+/***/ 138:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n    <h2>Add Item</h2>\n    <form #itemForm=\"ngForm\" (ngSubmit)=\"onSubmit()\">\n        <code style=\"white-space: pre-line;\">{{diagnostic}}</code>\n        <div class=\"form-group\">\n            <label for=\"name\">Name</label>\n            <input type=\"text\" class=\"form-control\" id=\"name\" required\n                [(ngModel)]=\"model.name\" name=\"name\" #spy #name=\"ngModel\">\n            <!--<div [hidden]=\"name.valid || name.pristine\"-->\n            <div [hidden]=\"name.valid\"\n                 class=\"alert alert-danger\">\n                Name is required\n            </div>\n            <!--<div>{{spy.className}}</div>-->\n\n        </div>\n        <div class=\"form-group\">\n            <label for=\"description\">Description</label>\n            <input type=\"text\" class=\"form-control\" id=\"description\"\n                [(ngModel)]=\"model.description\" name=\"description\">\n        </div>\n\n\n        <button type=\"submit\" class=\"btn btn-success\" [disabled]=\"name.invalid\" >Submit</button>\n        <button type=\"button\" class=\"btn btn-default\" (click)=\"newItem(); itemForm.reset()\">Reset</button>\n\n    </form>\n</div>"
+module.exports = "<div class=\"container\">\n    <h2>Add Item</h2>\n    <form #itemForm=\"ngForm\" (ngSubmit)=\"onSubmit()\">\n        <code style=\"white-space: pre-line;\">{{model.diagnostic}}</code>\n        <div class=\"form-group\">\n            <label for=\"name\">Name</label>\n            <input type=\"text\" class=\"form-control\" id=\"name\" required\n                [(ngModel)]=\"model.name\" name=\"name\" #spy #name=\"ngModel\">\n            <!--<div [hidden]=\"name.valid || name.pristine\"-->\n            <div [hidden]=\"name.valid\"\n                 class=\"alert alert-danger\">\n                Name is required\n            </div>\n            <!--<div>{{spy.className}}</div>-->\n\n        </div>\n        <div class=\"form-group\">\n            <label for=\"description\">Description</label>\n            <input type=\"text\" class=\"form-control\" id=\"description\"\n                [(ngModel)]=\"model.description\" name=\"description\">\n        </div>\n\n\n        <button type=\"submit\" class=\"btn btn-success\" [disabled]=\"name.invalid\">Submit</button>\n        <button type=\"button\" class=\"btn btn-default\" (click)=\"newItem(); itemForm.reset()\">Reset</button>\n\n    </form>\n</div>\n"
 
 /***/ }),
 
-/***/ 162:
+/***/ 165:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(71);
+module.exports = __webpack_require__(73);
 
 
 /***/ }),
 
-/***/ 47:
+/***/ 28:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_utility_service__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(141);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise__ = __webpack_require__(142);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ItemsService; });
+/**
+ * Created by marcofalsitta on 26.05.17.
+ */
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var ItemsService = (function () {
+    function ItemsService(http) {
+        this.host = "";
+        this.http = http;
+    }
+    ItemsService.prototype.fetchItems = function () {
+        return this.http.get(this.host + "/items")
+            .toPromise()
+            .then(function (response) {
+            return response.json();
+        })
+            .catch(this.handleError);
+    };
+    ItemsService.prototype.addItem = function (item) {
+        var headers = new Headers({ 'Content-Type': 'application/json' });
+        return this.http.put(this.host + "/item", item, headers).toPromise()
+            .then(function (response) {
+            return response.json();
+        })
+            .catch(this.handleError);
+    };
+    ItemsService.prototype.deleteItem = function (itemId) {
+        return this.http.delete(this.host + "/item" + "/" + itemId).toPromise()
+            .then(function (response) {
+            return response.json();
+        })
+            .catch(this.handleError);
+    };
+    ItemsService.prototype.handleError = function (error) {
+        console.error('An error occurred', error); // for demo purposes only
+        return Promise.reject(error.message || error);
+    };
+    return ItemsService;
+}());
+ItemsService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
+], ItemsService);
+
+var _a;
+//# sourceMappingURL=items.service.js.map
+
+/***/ }),
+
+/***/ 49:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_utility_service__ = __webpack_require__(82);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Item; });
 /**
  * Created by marcofalsitta on 26.05.17.
@@ -30,7 +101,7 @@ var Item = (function () {
         this.id = null;
         this.name = null;
         this.description = null;
-        this.creationTimestamp = new Date();
+        this.creationDate = new Date().getTime();
         this.id = __WEBPACK_IMPORTED_MODULE_0__utils_utility_service__["a" /* UtilityService */].getInstance().generateUUID();
         if (iITem) {
             if (iITem.id) {
@@ -38,11 +109,18 @@ var Item = (function () {
             }
             this.name = iITem.name;
             this.description = iITem.description;
-            if (iITem.creationTimestamp) {
-                this.creationTimestamp = iITem.creationTimestamp;
+            if (iITem.creationDate) {
+                this.creationDate = iITem.creationDate;
             }
         }
     }
+    Object.defineProperty(Item.prototype, "diagnostic", {
+        get: function () {
+            return JSON.stringify(this, null, "\t");
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Item;
 }());
 
@@ -50,15 +128,49 @@ var Item = (function () {
 
 /***/ }),
 
-/***/ 48:
+/***/ 72:
+/***/ (function(module, exports) {
+
+function webpackEmptyContext(req) {
+	throw new Error("Cannot find module '" + req + "'.");
+}
+webpackEmptyContext.keys = function() { return []; };
+webpackEmptyContext.resolve = webpackEmptyContext;
+module.exports = webpackEmptyContext;
+webpackEmptyContext.id = 72;
+
+
+/***/ }),
+
+/***/ 73:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Item__ = __webpack_require__(47);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__items_service__ = __webpack_require__(79);
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__(78);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(83);
+
+
+
+
+if (__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].production) {
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["a" /* enableProdMode */])();
+}
+__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_2__app_app_module__["a" /* AppModule */]);
+//# sourceMappingURL=main.js.map
+
+/***/ }),
+
+/***/ 79:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Item__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__items_service__ = __webpack_require__(28);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ItemFormComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -73,9 +185,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var AppComponent = (function () {
     function AppComponent(itemsService) {
+        this.itemsService = itemsService;
+        this.item = new __WEBPACK_IMPORTED_MODULE_1__Item__["a" /* Item */]();
+        this.items = [];
         this.title = "Fluance - Test";
-        this.items = itemsService.getItems();
-        this.item = this.items[0];
     }
     AppComponent.prototype.onItemClick = function (id) {
         var selectedItem = this.getItemIndexFromId(id);
@@ -100,95 +213,58 @@ var AppComponent = (function () {
     AppComponent.prototype.onKeyEnter = function (event) {
         console.log("sending " + this.insertedValues);
     };
+    AppComponent.prototype.onItemAdded = function (event) {
+        console.warn("test event binding", event);
+        this.refreshList();
+    };
+    AppComponent.prototype.onItemRemove = function (id) {
+        var _this = this;
+        this.itemsService.deleteItem(id).then(function (removedItem) {
+            console.info("removed item ", removedItem);
+            _this.refreshList();
+        });
+    };
+    AppComponent.prototype.ngOnInit = function () {
+        this.refreshList();
+    };
+    AppComponent.prototype.refreshList = function () {
+        var _this = this;
+        this.itemsService.fetchItems().then(function (items) {
+            //reorder items
+            items.sort(function (a, b) {
+                return a.creationDate - b.creationDate;
+            });
+            _this.items = items;
+            _this.item = _this.items[0];
+        });
+    };
     return AppComponent;
 }());
 AppComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
         selector: 'my-app',
         providers: [__WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */]],
-        template: "\n        <h1>{{title}}</h1>\n        <h2>Chosen technology is :{{item.name}}</h2>\n        <p>Technologies:</p>\n        <ul class=\"list-group\">\n            <li *ngFor=\"let item of items\" class=\"list-group-item\">\n                <span>{{item.name}}</span>\n                <button class=\"btn\" (click)=\"onItemClick(item.id)\"> select me</button>\n            </li>\n        </ul>\n        <p *ngIf=\"items.length > 3\">There are many technologies!</p>\n        <div>\n            <input (keyup)=\"onKeyUp($event)\" (keyup.enter)=\"onKeyEnter($event)\" class=\"form-control\" >\n            <p>{{insertedValues}}</p>\n        </div>\n\n\n        <item-form>new form here...</item-form>\n        \n    "
+        template: "\n    <h1>{{title}}</h1>\n    <h2>Chosen technology is :{{item.name}}</h2>\n    <p>Technologies:</p>\n    <ul class=\"list-group\">\n      <li *ngFor=\"let item of items\" class=\"list-group-item\">\n        <span>{{item.name}} </span>\n        <code>{{item.id}}</code>\n        <button class=\"btn\" (click)=\"onItemClick(item.id)\"> select me</button>\n        <button class=\"btn btn-danger\" (click)=\"onItemRemove(item.id)\"> remove me</button>\n      </li>\n    </ul>\n    <!--<p *ngIf=\"items.length > 3\">There are many technologies!</p>-->\n    <div>\n      <input (keyup)=\"onKeyUp($event)\" (keyup.enter)=\"onKeyEnter($event)\" class=\"form-control\" >\n      <p>{{insertedValues}}</p>\n    </div>\n\n\n    <item-form (onItemAdded)=\"onItemAdded($event)\">new form here...</item-form>\n\n  "
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */]) === "function" && _a || Object])
 ], AppComponent);
-
-var ItemFormComponent = (function () {
-    function ItemFormComponent() {
-        this.model = new __WEBPACK_IMPORTED_MODULE_1__Item__["a" /* Item */]();
-        this.submitted = false;
-    }
-    ItemFormComponent.prototype.onSubmit = function () {
-        this.submitted = true;
-        console.log("submtting...", this.submitted);
-    };
-    ItemFormComponent.prototype.newItem = function () {
-        this.model = new __WEBPACK_IMPORTED_MODULE_1__Item__["a" /* Item */]();
-    };
-    Object.defineProperty(ItemFormComponent.prototype, "diagnostic", {
-        get: function () {
-            return JSON.stringify(this.model, null, "\t");
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return ItemFormComponent;
-}());
-ItemFormComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Component */])({
-        selector: "item-form",
-        template: __webpack_require__(137)
-    }),
-    __metadata("design:paramtypes", [])
-], ItemFormComponent);
 
 var _a;
 //# sourceMappingURL=app.component.js.map
 
 /***/ }),
 
-/***/ 70:
-/***/ (function(module, exports) {
-
-function webpackEmptyContext(req) {
-	throw new Error("Cannot find module '" + req + "'.");
-}
-webpackEmptyContext.keys = function() { return []; };
-webpackEmptyContext.resolve = webpackEmptyContext;
-module.exports = webpackEmptyContext;
-webpackEmptyContext.id = 70;
-
-
-/***/ }),
-
-/***/ 71:
+/***/ 80:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__(77);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(78);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(82);
-
-
-
-
-if (__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].production) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["a" /* enableProdMode */])();
-}
-__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_2__app_app_module__["a" /* AppModule */]);
-//# sourceMappingURL=main.js.map
-
-/***/ }),
-
-/***/ 78:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(75);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(76);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__item_add_component__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__items_service__ = __webpack_require__(28);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -202,6 +278,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
 var AppModule = (function () {
     function AppModule() {
     }
@@ -209,8 +286,13 @@ var AppModule = (function () {
 }());
 AppModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */])({
-        imports: [__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["a" /* BrowserModule */], __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormsModule */], __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* HttpModule */]],
-        declarations: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */], __WEBPACK_IMPORTED_MODULE_4__app_component__["b" /* ItemFormComponent */]],
+        imports: [
+            __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["a" /* BrowserModule */],
+            __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormsModule */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* HttpModule */]
+        ],
+        providers: [__WEBPACK_IMPORTED_MODULE_6__items_service__["a" /* ItemsService */]],
+        declarations: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */], __WEBPACK_IMPORTED_MODULE_5__item_add_component__["a" /* ItemFormComponent */]],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
@@ -219,15 +301,16 @@ AppModule = __decorate([
 
 /***/ }),
 
-/***/ 79:
+/***/ 81:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mock_items__ = __webpack_require__(80);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ItemsService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Item__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__items_service__ = __webpack_require__(28);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ItemFormComponent; });
 /**
- * Created by marcofalsitta on 26.05.17.
+ * Created by marcofalsitta on 27.05.17.
  */
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -235,49 +318,61 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 
 
-var ItemsService = (function () {
-    function ItemsService() {
+
+var ItemFormComponent = (function () {
+    function ItemFormComponent(itemsService) {
+        this.itemsService = itemsService;
+        this.onItemAdded = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* EventEmitter */]();
+        this.onItemRemoved = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* EventEmitter */]();
+        this.model = new __WEBPACK_IMPORTED_MODULE_1__Item__["a" /* Item */]();
+        this.submitted = false;
     }
-    ItemsService.prototype.getItems = function () {
-        return __WEBPACK_IMPORTED_MODULE_1__mock_items__["a" /* ITEMS */];
+    ItemFormComponent.prototype.onSubmit = function () {
+        var _this = this;
+        this.submitted = true;
+        console.log("submitting...", this.submitted);
+        this.itemsService.addItem(this.model).then(function (item) {
+            console.log(item);
+            _this.onItemAdded.emit(item);
+        });
     };
-    return ItemsService;
+    ItemFormComponent.prototype.newItem = function () {
+        this.model = new __WEBPACK_IMPORTED_MODULE_1__Item__["a" /* Item */]();
+    };
+    return ItemFormComponent;
 }());
-ItemsService = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["d" /* Injectable */])()
-], ItemsService);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["d" /* Output */])(),
+    __metadata("design:type", Object)
+], ItemFormComponent.prototype, "onItemAdded", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["d" /* Output */])(),
+    __metadata("design:type", Object)
+], ItemFormComponent.prototype, "onItemRemoved", void 0);
+ItemFormComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
+        selector: "item-form",
+        providers: [__WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */]],
+        template: __webpack_require__(138)
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */]) === "function" && _a || Object])
+], ItemFormComponent);
 
-//# sourceMappingURL=items.service.js.map
-
-/***/ }),
-
-/***/ 80:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Item__ = __webpack_require__(47);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ITEMS; });
-/**
- * Created by marcofalsitta on 26.05.17.
- */
-
-var ITEMS = [
-    new __WEBPACK_IMPORTED_MODULE_0__Item__["a" /* Item */]({ name: "Aurelia", description: "Most compliant framework create by Rob Eisenberg, ex employee at Google working on Angular 2 project. Written with next-generation EcmaScript. Integrates with Web Components. No external dependencies. Leverage the technology of the future but target today's mobile, desktop and browser environments." }),
-    new __WEBPACK_IMPORTED_MODULE_0__Item__["a" /* Item */]({ name: "Ember", description: "An open-source JavaScript web framework, based on the Model–view–viewmodel (MVVM) pattern. It allows developers to create scalable single-page web applications[3] by incorporating common idioms and best practices into the framework." }),
-    new __WEBPACK_IMPORTED_MODULE_0__Item__["a" /* Item */]({ name: "Angular 4", description: "A TypeScript-based open-source front-end web application platform led by the Angular Team at Google and by a community of individuals and corporations to address all of the parts of the developer's workflow while building complex web applications. Angular is a complete rewrite from the same team that built AngularJS." }),
-    new __WEBPACK_IMPORTED_MODULE_0__Item__["a" /* Item */]({ name: "React", description: "An open-source JavaScript library for building user interfaces.It is maintained by Facebook, Instagram and a community of individual developers and corporations.<br>According to JavaScript analytics service Libscore, React is currently being used on the websites of Netflix, Imgur, Buffer, Bleacher Report, Feedly, Airbnb, SeatGeek, HelloSign, Walmart, and others.<br>React allows developers to create large web applications that use data which can change over time, without reloading the page. Its main goal is to be fast, simple and scalable. React processes only user interfaces in applications. This corresponds to View in the Model-View-Controller (MVC) template, and can be used in combination with other JavaScript libraries or frameworks in MVC, such as AngularJS." })
-];
-//# sourceMappingURL=mock-items.js.map
+var _a;
+//# sourceMappingURL=item-add-component.js.map
 
 /***/ }),
 
-/***/ 81:
+/***/ 82:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UtilityService; });
 /**
  * Created by marcofalsitta on 26.05.17.
@@ -319,7 +414,7 @@ var UtilityService = UtilityService_1 = (function () {
 }());
 UtilityService._instance = new UtilityService_1();
 UtilityService = UtilityService_1 = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["d" /* Injectable */])(),
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Injectable */])(),
     __metadata("design:paramtypes", [])
 ], UtilityService);
 
@@ -328,7 +423,7 @@ var UtilityService_1;
 
 /***/ }),
 
-/***/ 82:
+/***/ 83:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -345,5 +440,5 @@ var environment = {
 
 /***/ })
 
-},[162]);
+},[165]);
 //# sourceMappingURL=main.bundle.js.map

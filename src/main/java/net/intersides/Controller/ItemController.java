@@ -33,7 +33,6 @@ public class ItemController {
         return this.itemService.getAllItems();
     }
 
-
     //SINGLE ITEM
     @RequestMapping(value = "/item/{id}", method = RequestMethod.GET)
     public ResponseEntity<Object> getItemById(@PathVariable("id") String id){
@@ -63,7 +62,7 @@ public class ItemController {
         }
     }
 
-    @RequestMapping(value = "/item/", method = RequestMethod.PUT)
+    @RequestMapping(value = "/item", method = RequestMethod.PUT)
     public ResponseEntity<Object> addItem(@RequestBody  Item item){
         console.info("PUT -> ItemController.create()"+item.toString());
         Item createItem = this.itemService.addItem(item);

@@ -1,0 +1,18 @@
+.list-group-item{
+  display: flex;
+  justify-content:space-around;
+  align-items: baseline;
+
+  >* {
+    margin: 0 8px;
+  }
+
+  code{
+    flex-grow: 2;
+  }
+
+}
+
+.description{
+  font-weight: 800;
+}

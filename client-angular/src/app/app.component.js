@@ -15,7 +15,7 @@ var items_service_1 = require("./items.service");
 var AppComponent = (function () {
     function AppComponent(itemsService) {
         this.title = "Fluance - Test";
-        this.items = itemsService.getItems();
+        this.items = itemsService.fetchItems();
         this.item = this.items[0];
     }
     AppComponent.prototype.onItemClick = function (id) {

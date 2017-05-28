@@ -14,7 +14,7 @@ var mock_items_1 = require("./mock-items");
 var ItemsService = (function () {
     function ItemsService() {
     }
-    ItemsService.prototype.getItems = function () {
+    ItemsService.prototype.fetchItems = function () {
         return mock_items_1.ITEMS;
     };
     return ItemsService;
