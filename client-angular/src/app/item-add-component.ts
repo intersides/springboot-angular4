@@ -18,6 +18,8 @@ export class ItemFormComponent {
   public model:Item;
   private submitted:boolean;
   lockId:boolean = true;
+  isUpdate:boolean = false;
+  idAtSelectionTime:string;
 
   @Input() parentSubject:Subject<any>;
 
@@ -33,19 +35,65 @@ export class ItemFormComponent {
   onSubmit(){
     this.submitted = true;
     console.log("submitting...", this.submitted);
-    this.itemsService.addItem(this.model).then((item)=>{
-      console.log(item);
-      this.onItemAdded.emit(item);
-    })
+
+    if(this.isUpdate){
+      this.itemsService.updateItem(this.model)
+        .then((item)=>{
+          console.log("updated", item);
+          this.onItemAdded.emit(item);
+      })
+        .catch(error=>{
+          console.error(error);
+      })
+    }
+    else{
+      this.itemsService.addItem(this.model).then((item)=>{
+        console.log("added",item);
+        this.onItemAdded.emit(item);
+      })
+        .catch(error=>{
+          console.error(error);
+        })
+
+    }
   }
 
   onSelected(selectedItem:Item){
     this.model = new Item(selectedItem);
+    this.idAtSelectionTime = this.model.id;
+    this.isUpdate = true;
+  }
+
+  public onLockToggle(event){
+    console.log("onLockToggle()");
+    this.lockId = !this.lockId;
+
+    // this.isUpdate = !this.lockId;
 
   }
 
-  newItem() {
+  onKeyUp(event, isId:boolean=false){
+    if(isId == true){
+      this.model.id = event.target.value;
+
+    }
+
+
+    if(typeof this.idAtSelectionTime !== "undefined"){
+
+      console.info(this.model.id);
+      console.warn(this.idAtSelectionTime);
+      console.log("___");
+
+      this.isUpdate = this.model.id == this.idAtSelectionTime;
+
+    }
+
+  }
+
+  resetForm(){
     this.model = new Item();
+    this.isUpdate = false;
   }
 
 

@@ -1,5 +1,6 @@
 package net.intersides.Service;
 
+import com.google.gson.JsonObject;
 import net.intersides.Dao.ItemDao;
 import net.intersides.Entity.Item;
 import org.slf4j.Logger;
@@ -15,6 +16,8 @@ import java.util.Collection;
  * Business logic
  */
 
+
+
 @Service
 public class ItemService {
 
@@ -26,36 +29,71 @@ public class ItemService {
 //    @Qualifier("staticData")
     private ItemDao itemDao;
 
-    public Collection<Item> getAllItems(){
-        return this.itemDao.getAllItems();
-    }
 
     public void removeAllItems(){
         this.itemDao.removeAllItems();
     }
 
-    public Item getItemById(String id){
-        return this.itemDao.read(id);
-    }
+    public ServiceResult getAllItems(){
+        Collection<Item> allItems = this.itemDao.getAllItems();
+        if(allItems != null){
+            return new ServiceResult(ServiceResult.OperationResult.SUCCEEDED, "all items have been fetched", allItems);
 
-    public Item removeItemById(String id){
-        Item itemToBeRemoved = this.getItemById(id);
-        return this.itemDao.delete(id) ? itemToBeRemoved : null;
-    }
-
-    public Item addItem(Item item){
-        boolean result = this.itemDao.create(item);
-        if(result){
-            return item;
         }
         else{
-            return null;
+            return new ServiceResult(ServiceResult.OperationResult.FAILED, "could not fetch items ");
         }
     }
 
-    public Item updateItem(Item item){
-        return this.itemDao.update(item) ? item : null;
+    public ServiceResult getItemById(String id){
+//        return this.itemDao.read(id);
+        Item foundItem = this.itemDao.read(id);
+        if(foundItem != null){
+            return new ServiceResult(ServiceResult.OperationResult.SUCCEEDED, "item with id "+id+" has been found", foundItem);
+        }
+        else{
+            return new ServiceResult(ServiceResult.OperationResult.FAILED, "could not find item with id "+id);
+        }
     }
+
+    public ServiceResult removeItemById(String id){
+        Item itemToBeRemoved = this.itemDao.read(id);
+        return this.itemDao.delete(id)
+                ? new ServiceResult(ServiceResult.OperationResult.SUCCEEDED, "item with id "+id+" has been removed", itemToBeRemoved)
+                : new ServiceResult(ServiceResult.OperationResult.FAILED, "failed to remove item with id "+id);
+    }
+
+    public ServiceResult addItem(Item item) {
+
+        if(this.itemDao.isIdPresent(item.getId())){
+            return new ServiceResult(ServiceResult.OperationResult.FAILED, "item is present");
+        }
+
+
+
+        Collection<Item> allItems = this.itemDao.getAllItems();
+        int itemsCount = allItems.size();
+        if(itemsCount < 5){
+            boolean result = this.itemDao.create(item);
+            if(result){
+                return new ServiceResult(ServiceResult.OperationResult.SUCCEEDED, "item has been added", item);
+            }
+            else{
+                return new ServiceResult(ServiceResult.OperationResult.FAILED, "failed to create item in database");
+            }
+
+        }
+        else{
+            return new ServiceResult(ServiceResult.OperationResult.FAILED, "maximum number of items have been reached");
+        }
+    }
+
+    public ServiceResult updateItem(Item item){
+        return this.itemDao.update(item)
+                ? new ServiceResult(ServiceResult.OperationResult.SUCCEEDED, "item has been added", item)
+                : new ServiceResult(ServiceResult.OperationResult.FAILED, "failed to update item with id "+item.getId());
+    }
+
 
 
 

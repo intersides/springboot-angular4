@@ -5,7 +5,7 @@
 import {EventEmitter, Injectable, Output}   from "@angular/core";
 import { ITEMS }        from "./mock-items"
 import {Item} from "./Item";
-import {Http} from "@angular/http";
+import {Http, RequestOptions, Headers, RequestMethod} from "@angular/http";
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -17,42 +17,103 @@ export class ItemsService{
   private host = "";
   private http:Http;
 
+  private headers = new Headers({'Content-Type': 'application/json'});
+
   constructor(http:Http){
     this.http = http;
+
+
+  }
+
+  private prepareRequest(){
+
   }
 
   fetchItems(): Promise<Item[]>{
-    return this.http.get(this.host+"/items")
+
+    let options = new RequestOptions({
+      headers:this.headers
+    });
+
+    return this.http.get(this.host+"/items", options)
       .toPromise()
       .then(response => {
-        return response.json() as Item[];
+        console.log(response.json().msg);
+        return response.json().data as Item[];
+      })
+      .catch(this.handleError);
+  }
+
+  getItem(itemId): Promise<Item>{
+
+    let options = new RequestOptions({
+      headers:this.headers
+    });
+
+    return this.http.post(this.host+"/item", {id:itemId}, options).toPromise()
+      .then(response =>{
+        console.log(response.json().msg);
+        return response.json().data;
       })
       .catch(this.handleError);
   }
 
   addItem(item:Item){
-  let headers = new Headers({'Content-Type': 'application/json'});
 
-    return this.http.put(this.host+"/item", item, headers).toPromise()
+    return this.http.put(this.host+"/item", item, this.headers).toPromise()
       .then(response =>{
-        return response.json();
+        console.log(response.json().msg);
+        return response.json().data;
+      })
+      .catch(this.handleError);
+  }
+
+  updateItem(item:Item){
+
+    return this.http.patch(this.host+"/item", item, this.headers).toPromise()
+      .then(response =>{
+        console.log(response.json().msg);
+        return response.json().data;
       })
       .catch(this.handleError);
   }
 
   deleteItem(itemId:string){
-    return this.http.delete(this.host+"/item"+"/"+itemId).toPromise()
+
+    let options = new RequestOptions({
+      headers:this.headers,
+      body:{id:itemId}
+    });
+
+    return this.http.delete(this.host+"/item", options).toPromise()
       .then(response =>{
-        return response.json();
+        console.log(response.json().msg);
+        return response.json().data;
       })
-      .catch(this.handleError);
+      .catch(error=>{
+        return this.handleError(error);
+      });
   }
 
 
 
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
-    return Promise.reject(error.message || error);
+  private handleError(error: any) {
+    console.error('An error occurred', error);
+    if(typeof error['_body'] == "string"){
+      try{
+        let errorObj = JSON.parse(error['_body']);
+        console.error(errorObj["msg"]);
+        return Promise.reject(errorObj["msg"]);
+
+      }
+      catch(jsonParseError){
+        console.error("could not parse:", error['_body']);
+      }
+
+    }
+    else{
+      console.error("trapped error is malformes, does not contains _body part");
+    }
   }
 
 }

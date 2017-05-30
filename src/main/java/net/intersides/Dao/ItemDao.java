@@ -23,4 +23,6 @@ public interface ItemDao {
 
     boolean delete(String id);
 
+    boolean isIdPresent(String id);
+
 }

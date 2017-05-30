@@ -1,22 +1,26 @@
-<h2 (onItemSelected)="onTest()">Add Item</h2>
+<h2>{{isUpdate ? 'Modify' : 'Add'}} Item</h2>
 
 <form #itemForm="ngForm" (ngSubmit)="onSubmit()">
     <code style="white-space: pre-line;">{{model.diagnostic}}</code>
 
     <div class="form-group">
       <label for="id">id</label>
-      <input type="text" class="form-control" id="id"
-             value="{{model.id}}" name="id" readonly>
-      <button (click)="lockId = !lockId">{{lockId ? 'lock' : 'unlock'}}</button>
-      is locked = {{lockId}}
-      <span class="glyphicon glyphicon-lock"></span>
+      <span>(editing is {{lockId ? 'lock' : 'unlock'}}. Select the icon to toggle its state.)</span>
+
+      <div style="display: flex; align-items: center">
+        <span (click)="onLockToggle($event)"  class="glyphicon {{lockId ? 'glyphicon-lock' : 'glyphicon-pencil'}}" style="margin:5px;"></span>
+        <input type="text" class="form-control" id="id"
+               (keyup)="onKeyUp($event, true)" value="{{model.id}}" name="id"  readonly="{{lockId ? 'readonly' : ''}}">
+      </div>
+
+
     </div>
 
 
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="name" required
-            [(ngModel)]="model.name" name="name" #spy #name="ngModel" >
+               (keyup)="onKeyUp($event, false)" [(ngModel)]="model.name" name="name" #spy #name="ngModel" >
         <!--<div [hidden]="name.valid || name.pristine"-->
         <div [hidden]="name.valid"
              class="alert alert-danger">
@@ -28,10 +32,10 @@
     <div class="form-group">
         <label for="description">Description</label>
         <input type="text" class="form-control" id="description"
-            [(ngModel)]="model.description" name="description">
+               (keyup)="onKeyUp($event, false)" [(ngModel)]="model.description" name="description">
     </div>
 
     <button type="submit" class="btn btn-success" [disabled]="name.invalid">Submit</button>
-    <button type="button" class="btn btn-default" (click)="newItem(); itemForm.reset()">Reset</button>
+    <button type="button" class="btn btn-default" (click)="resetForm(); itemForm.reset()">Reset</button>
 
 </form>

@@ -18,14 +18,6 @@ public class Item {
 
     private static int MAX_LENGTH=36;
 
-    public class IdTooLongException extends Exception {
-
-        public IdTooLongException(String message) {
-            super(message);
-        }
-
-    }
-
     public Item(){
         this.id = UUID.randomUUID().toString();
         this.creationDate = Utilities.generateTimestamp();
@@ -37,7 +29,7 @@ public class Item {
         this.description = description;
     }
 
-    public Item(String id, String name, String description) throws IdTooLongException {
+    public Item(String id, String name, String description){
         this(name, description);
         this.setId(id);
     }
@@ -47,14 +39,8 @@ public class Item {
         return id;
     }
 
-    public void setId(String id) throws IdTooLongException{
-
-        if(id.length() > MAX_LENGTH){
-            throw new IdTooLongException("Id surpassed the maximum length ("+MAX_LENGTH+")");
-        }
-        else{
-            this.id = id;
-        }
+    public void setId(String id){
+        this.id = id;
     }
 
     public Timestamp getCreationDate() {

@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,7 +23,7 @@ import java.util.*;
 @Qualifier("mySQLData")
 public class ItemDaoMySQL implements ItemDao {
 
-    static final Logger console = LoggerFactory.getLogger(ItemDaoMySQL.class);
+    private static final Logger console = LoggerFactory.getLogger(ItemDaoMySQL.class);
 
     @Autowired //use the application properties attributes for connections
     private JdbcTemplate jdbcTemplate;
@@ -34,11 +34,7 @@ public class ItemDaoMySQL implements ItemDao {
             //rs could be null ?
 
             Item item = new Item();
-            try {
-                item.setId(rs.getString("id"));
-            } catch (Item.IdTooLongException e) {
-                e.printStackTrace();
-            }
+            item.setId(rs.getString("id"));
             item.setCreationDate(rs.getTimestamp("creationTimestamp"));
             item.setName(rs.getString("name"));
             item.setDescription(rs.getString("description"));
@@ -59,16 +55,20 @@ public class ItemDaoMySQL implements ItemDao {
 
     @Override
     public boolean create(Item item) {
+
         try {
-            jdbcTemplate.update("INSERT INTO fluance.items (id, name, description) VALUES(?, ?, ?);", new Object[]{item.getId(), item.getName(), item.getDescription()});
+            jdbcTemplate.update("INSERT INTO fluance.items (id, name, description) VALUES(?, ?, ?);", item.getId(), item.getName(), item.getDescription());
         }
-        catch (Exception ex){
+        catch (DataAccessException ex){
             console.warn("item -> "+item.toString());
             console.error(ex.getMessage());
             return false;
         }
         return true;
+
+
     }
+
 
     @Override
     public Item read(String id) {
@@ -92,11 +92,10 @@ public class ItemDaoMySQL implements ItemDao {
         final String description = item.getDescription();
 
         int updatedRows = jdbcTemplate.update(
-                "UPDATE fluance.items SET name = ?, description = ? WHERE items.id = ?;",
-                new Object[]{name, description, id} );
-
+                "UPDATE fluance.items SET name = ?, description = ? WHERE items.id = ?;", name, description, id);
         return updatedRows != 0;
     }
+
 
     @Override
     public boolean delete(String id) {
@@ -104,5 +103,10 @@ public class ItemDaoMySQL implements ItemDao {
         return removedRows == 1;
     }
 
+    @Override
+    public boolean isIdPresent(String id){
+        String sql = "SELECT COUNT(*) FROM `fluance`.`items` WHERE items.id = ?";
+        return 1 == jdbcTemplate.queryForObject(sql, new Object[] { id }, Integer.class);
+    }
 
 }

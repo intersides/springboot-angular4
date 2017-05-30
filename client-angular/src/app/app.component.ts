@@ -1,17 +1,23 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Item} from "./Item";
 import { ItemsService } from "./items.service";
 import { ItemFormComponent } from "./item-add-component";
-import {Subject} from "rxjs/Subject";
 
 @Component({
   selector: 'my-app',
   providers:[ItemsService],
   template: `
+
+    
     <div class="container">
 
       <div>
         <h1>{{title}}</h1>
+
+        <div class="container" style="max-width: 500px;">
+          <item-form (onItemAdded)="onItemAdded($event)">new form here...</item-form>
+        </div>
+
 
         <h3>{{items.length > 0 ? items.length: 'Empty'}} item{{items.length > 1 ? 's' : ''}} in the list:</h3>
         <ul class="list-group">
@@ -19,23 +25,19 @@ import {Subject} from "rxjs/Subject";
             <span class="name">{{item.name}} </span>
             <span class="description">{{item.description}} </span>
             <code>{{item.id}}</code>
-            <button class="btn" (click)="onItemSelect(item.id)"> select me</button>
+            <button class="btn" (click)="onItemSelect(item.id)">select me</button>
             <button class="btn btn-danger" (click)="onItemRemove(item.id)"> remove me</button>
           </li>
         </ul>
         <!--<p *ngIf="items.length > 3">There are many items!</p>-->
-        <div>
-          <input (keyup)="onKeyUp($event)" (keyup.enter)="onKeyEnter($event)" class="form-control">
-          <p>{{insertedValues}}</p>
-        </div>
+       
 
       </div>
 
 
-      <div class="container" style="max-width: 500px;">
-        <item-form (onItemAdded)="onItemAdded($event)">new form here...</item-form>
-      </div>
+    
 
+      <button (click)="getItem()">test get item</button>
 
     </div>
 
@@ -45,9 +47,7 @@ export class AppComponent implements OnInit{
   title : string;
   item : Item = new Item();
   items: Item[] = [];
-  insertedValues:string;
 
-  parentSubject:Subject<any> = new Subject();
 
   constructor(private itemsService:ItemsService){
     this.title = "Fluance - Test";
@@ -68,12 +68,12 @@ export class AppComponent implements OnInit{
 
   }
 
-  onKeyUp(event:any){
-    this.insertedValues = event.target.value;
-  }
+  getItem(event){
+    this.itemsService.getItem("123456").then((result)=>{
+      console.log(result);
 
-  onKeyEnter(event:any){
-    console.log(`sending ${this.insertedValues}`);
+    })
+
   }
 
   onItemAdded(event:Item){
@@ -85,7 +85,6 @@ export class AppComponent implements OnInit{
     let selectedItem = this.getItemIndexFromId(id);
     if(selectedItem != null){
       this.item = selectedItem;
-      // this.parentSubject.next('some value');
       this.itemFormComponent.onSelected(selectedItem);
 
     }
@@ -100,7 +99,7 @@ export class AppComponent implements OnInit{
       this.refreshList();
     })
       .catch((exception)=>{
-      console.error(exception);
+        console.error(exception);
     });
   }
 

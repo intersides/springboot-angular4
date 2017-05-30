@@ -73,5 +73,10 @@ public class ItemDaoStaticData implements ItemDao {
         return removedItem != null;
     }
 
+    @Override
+    public boolean isIdPresent(String id){
+        return items.get(id) != null;
+    }
+
 
 }
