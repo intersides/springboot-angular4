@@ -13,7 +13,7 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class ItemsService{
 
-  private host = "/marco";
+  private host = "/marcofalsitta";
   private http:Http;
 
   private headers = new Headers({'Content-Type': 'application/json'});
