@@ -92,6 +92,11 @@ request header content type is set as "application/json". Otherwise a 403, FORBI
 ####Data Access Layer
 A data access object is used to implement CRUD operations to handle database operations.
 
+####Remote MySQL installation
+A semi-automated installation of MySQL was out of the scope of this simple project. Ideally a self-contained relational 
+database such SQLIte could replace the actual MySQL choice.
+At the moment I opted for a remote provided MySQL database. This temporary solution simplify
+distribution.
 
 ## Angular 4 client-side part
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.6.
