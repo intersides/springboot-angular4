@@ -2,10 +2,9 @@
  * Created by marcofalsitta on 26.05.17.
  */
 
-import {EventEmitter, Injectable, Output}   from "@angular/core";
-import { ITEMS }        from "./mock-items"
+import {Injectable}   from "@angular/core";
 import {Item} from "./Item";
-import {Http, RequestOptions, Headers, RequestMethod} from "@angular/http";
+import {Http, RequestOptions, Headers} from "@angular/http";
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -14,7 +13,7 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class ItemsService{
 
-  private host = "";
+  private host = "/marco";
   private http:Http;
 
   private headers = new Headers({'Content-Type': 'application/json'});
