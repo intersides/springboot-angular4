@@ -163,10 +163,11 @@ export class AppComponent implements OnInit{
           return a.creationDate - b.creationDate;
         });
 
-        this.items = items;
-        this.item = this.items[0];
-
       }
+
+      this.items = items;
+      this.item = this.items[0];
+
     })
       .catch((exception)=>{
         this.openSnackBar(exception, "alert");
