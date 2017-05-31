@@ -29,8 +29,10 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
-
-    //ITEMS COLLECTION
+    /**
+     *
+     * @return ResponseEntity json package
+     */
     @RequestMapping(value = "/removeAll", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> removeAll(){
         console.info("ItemController.removeAll()");
@@ -38,7 +40,6 @@ public class ItemController {
         return new ItemServiceResponse("all items removed").write();
     }
 
-    //ITEMS COLLECTION
     @RequestMapping(value = "/items", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> getAllItems(){
         console.info("ItemController.getAllItems()");
