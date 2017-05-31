@@ -1,41 +1,50 @@
-<h2>{{isUpdate ? 'Modify' : 'Add'}} Item</h2>
 
 <form #itemForm="ngForm" (ngSubmit)="onSubmit()">
-    <code style="white-space: pre-line;">{{model.diagnostic}}</code>
 
-    <div class="form-group">
-      <label for="id">id</label>
-      <span>(editing is {{lockId ? 'lock' : 'unlock'}}. Select the icon to toggle its state.)</span>
+  <md-card id="item-card">
+    <md-card-header>
+      <md-card-title>{{isUpdate ? 'Modify' : 'Add'}} Item</md-card-title>
+    </md-card-header>
+    <md-card-content>
+        <code [hidden]="!devMode" style="white-space: pre-line;">{{model.diagnostic}}</code>
 
-      <div style="display: flex; align-items: center">
-        <span (click)="onLockToggle($event)"  class="glyphicon {{lockId ? 'glyphicon-lock' : 'glyphicon-pencil'}}" style="margin:5px;"></span>
-        <input type="text" class="form-control" id="id"
-               (keyup)="onKeyUp($event, true)" value="{{model.id}}" name="id"  readonly="{{lockId ? 'readonly' : ''}}">
-      </div>
+      <p>
+        <!--<span>(editing is {{lockId ? 'lock' : 'unlock'}}. Select the icon to toggle its state.)</span>-->
+
+        <md-input-container class="full-width">
+          <input mdInput placeholder="Id" disabled="{{lockId}}" maxlength="36" (keyup)="onKeyUp($event, true)" value="{{model.id}}" name="id" >
+        </md-input-container>
+
+        <md-slide-toggle
+          [color]="color"
+          [checked]="checked"
+          [disabled]="disabled"
+          (change)="onLockToggle($event)">edit id
+        </md-slide-toggle>
+
+      </p>
 
 
-    </div>
+      <p>
+        <md-input-container class="full-width">
+          <input mdInput placeholder="Name" (keyup)="onKeyUp($event, false)" required [(ngModel)]="model.name" name="name" #spy #name="ngModel" >
+        </md-input-container>
+      <!--<span [hidden]="name.valid">-->
+        <!--Name is required-->
+      <!--</span>-->
+      </p>
+      <p>
+        <md-input-container class="full-width">
+          <input mdInput placeholder="Description" (keyup)="onKeyUp($event, false)" [(ngModel)]="model.description" name="description" >
+        </md-input-container>
+      </p>
 
+    </md-card-content>
+    <md-card-actions>
+      <button md-button type="submit" [disabled]="name.invalid" >SUBMIT</button>
+      <button md-button type="button" (click)="resetForm(); itemForm.reset()">RESET</button>
+    </md-card-actions>
+  </md-card>
 
-    <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" required
-               (keyup)="onKeyUp($event, false)" [(ngModel)]="model.name" name="name" #spy #name="ngModel" >
-        <!--<div [hidden]="name.valid || name.pristine"-->
-        <div [hidden]="name.valid"
-             class="alert alert-danger">
-            Name is required
-        </div>
-        <!--<div>{{spy.className}}</div>-->
-
-    </div>
-    <div class="form-group">
-        <label for="description">Description</label>
-        <input type="text" class="form-control" id="description"
-               (keyup)="onKeyUp($event, false)" [(ngModel)]="model.description" name="description">
-    </div>
-
-    <button type="submit" class="btn btn-success" [disabled]="name.invalid">Submit</button>
-    <button type="button" class="btn btn-default" (click)="resetForm(); itemForm.reset()">Reset</button>
 
 </form>

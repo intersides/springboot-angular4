@@ -1,29 +1,54 @@
 webpackJsonp([1,4],{
 
-/***/ 139:
-/***/ (function(module, exports) {
-
-module.exports = "<h2>{{isUpdate ? 'Modify' : 'Add'}} Item</h2>\n\n<form #itemForm=\"ngForm\" (ngSubmit)=\"onSubmit()\">\n    <code style=\"white-space: pre-line;\">{{model.diagnostic}}</code>\n\n    <div class=\"form-group\">\n      <label for=\"id\">id</label>\n      <span>(editing is {{lockId ? 'lock' : 'unlock'}}. Select the icon to toggle its state.)</span>\n\n      <div style=\"display: flex; align-items: center\">\n        <span (click)=\"onLockToggle($event)\"  class=\"glyphicon {{lockId ? 'glyphicon-lock' : 'glyphicon-pencil'}}\" style=\"margin:5px;\"></span>\n        <input type=\"text\" class=\"form-control\" id=\"id\"\n               (keyup)=\"onKeyUp($event, true)\" value=\"{{model.id}}\" name=\"id\"  readonly=\"{{lockId ? 'readonly' : ''}}\">\n      </div>\n\n\n    </div>\n\n\n    <div class=\"form-group\">\n        <label for=\"name\">Name</label>\n        <input type=\"text\" class=\"form-control\" id=\"name\" required\n               (keyup)=\"onKeyUp($event, false)\" [(ngModel)]=\"model.name\" name=\"name\" #spy #name=\"ngModel\" >\n        <!--<div [hidden]=\"name.valid || name.pristine\"-->\n        <div [hidden]=\"name.valid\"\n             class=\"alert alert-danger\">\n            Name is required\n        </div>\n        <!--<div>{{spy.className}}</div>-->\n\n    </div>\n    <div class=\"form-group\">\n        <label for=\"description\">Description</label>\n        <input type=\"text\" class=\"form-control\" id=\"description\"\n               (keyup)=\"onKeyUp($event, false)\" [(ngModel)]=\"model.description\" name=\"description\">\n    </div>\n\n    <button type=\"submit\" class=\"btn btn-success\" [disabled]=\"name.invalid\">Submit</button>\n    <button type=\"button\" class=\"btn btn-default\" (click)=\"resetForm(); itemForm.reset()\">Reset</button>\n\n</form>\n"
-
-/***/ }),
-
-/***/ 166:
+/***/ 154:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(75);
+exports = module.exports = __webpack_require__(22)(false);
+// imports
+
+
+// module
+exports.push([module.i, ".cdk-overlay-container [role=\"alert\"] {\n  color: white;\n  background-color: red; }\n\ndiv.snackbar {\n  font-family: 'Roboto';\n  font-style: normal;\n  margin: 12px;\n  font-size: 22px;\n  font-weight: bold;\n  color: white; }\n  div.snackbar:before {\n    content: \"Info:\";\n    display: inline-block;\n    margin-right: 5px; }\n  div.snackbar.alert {\n    color: #b0121d; }\n    div.snackbar.alert:before {\n      content: \"Warning:\";\n      display: inline-block;\n      margin-right: 5px; }\n", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ 155:
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"snackbar {{type}}\">{{message}}</div>\n"
+
+/***/ }),
+
+/***/ 156:
+/***/ (function(module, exports) {
+
+module.exports = "\n<form #itemForm=\"ngForm\" (ngSubmit)=\"onSubmit()\">\n\n  <md-card id=\"item-card\">\n    <md-card-header>\n      <md-card-title>{{isUpdate ? 'Modify' : 'Add'}} Item</md-card-title>\n    </md-card-header>\n    <md-card-content>\n        <code [hidden]=\"!devMode\" style=\"white-space: pre-line;\">{{model.diagnostic}}</code>\n\n      <p>\n        <!--<span>(editing is {{lockId ? 'lock' : 'unlock'}}. Select the icon to toggle its state.)</span>-->\n\n        <md-input-container class=\"full-width\">\n          <input mdInput placeholder=\"Id\" disabled=\"{{lockId}}\" maxlength=\"36\" (keyup)=\"onKeyUp($event, true)\" value=\"{{model.id}}\" name=\"id\" >\n        </md-input-container>\n\n        <md-slide-toggle\n          [color]=\"color\"\n          [checked]=\"checked\"\n          [disabled]=\"disabled\"\n          (change)=\"onLockToggle($event)\">edit id\n        </md-slide-toggle>\n\n      </p>\n\n\n      <p>\n        <md-input-container class=\"full-width\">\n          <input mdInput placeholder=\"Name\" (keyup)=\"onKeyUp($event, false)\" required [(ngModel)]=\"model.name\" name=\"name\" #spy #name=\"ngModel\" >\n        </md-input-container>\n      <!--<span [hidden]=\"name.valid\">-->\n        <!--Name is required-->\n      <!--</span>-->\n      </p>\n      <p>\n        <md-input-container class=\"full-width\">\n          <input mdInput placeholder=\"Description\" (keyup)=\"onKeyUp($event, false)\" [(ngModel)]=\"model.description\" name=\"description\" >\n        </md-input-container>\n      </p>\n\n    </md-card-content>\n    <md-card-actions>\n      <button md-button type=\"submit\" [disabled]=\"name.invalid\" >SUBMIT</button>\n      <button md-button type=\"button\" (click)=\"resetForm(); itemForm.reset()\">RESET</button>\n    </md-card-actions>\n  </md-card>\n\n\n</form>\n"
+
+/***/ }),
+
+/***/ 211:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(88);
 
 
 /***/ }),
 
-/***/ 29:
+/***/ 37:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(142);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(75);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise__ = __webpack_require__(143);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise__ = __webpack_require__(175);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_toPromise__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ItemsService; });
 /**
@@ -45,13 +70,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var ItemsService = (function () {
     function ItemsService(http) {
         this.host = "";
-        this.headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Content-Type': 'application/json' });
+        this.headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Headers */]({ 'Content-Type': 'application/json' });
         this.http = http;
     }
     ItemsService.prototype.prepareRequest = function () {
     };
     ItemsService.prototype.fetchItems = function () {
-        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* RequestOptions */]({
+        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({
             headers: this.headers
         });
         return this.http.get(this.host + "/items", options)
@@ -63,7 +88,7 @@ var ItemsService = (function () {
             .catch(this.handleError);
     };
     ItemsService.prototype.getItem = function (itemId) {
-        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* RequestOptions */]({
+        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({
             headers: this.headers
         });
         return this.http.post(this.host + "/item", { id: itemId }, options).toPromise()
@@ -91,7 +116,7 @@ var ItemsService = (function () {
     };
     ItemsService.prototype.deleteItem = function (itemId) {
         var _this = this;
-        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* RequestOptions */]({
+        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({
             headers: this.headers,
             body: { id: itemId }
         });
@@ -109,7 +134,6 @@ var ItemsService = (function () {
         if (typeof error['_body'] == "string") {
             try {
                 var errorObj = JSON.parse(error['_body']);
-                console.error(errorObj["msg"]);
                 return Promise.reject(errorObj["msg"]);
             }
             catch (jsonParseError) {
@@ -117,14 +141,14 @@ var ItemsService = (function () {
             }
         }
         else {
-            console.error("trapped error is malformes, does not contains _body part");
+            console.error("trapped error is malformed, does not contains _body part");
         }
     };
     return ItemsService;
 }());
 ItemsService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["g" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
 ], ItemsService);
 
 var _a;
@@ -132,11 +156,11 @@ var _a;
 
 /***/ }),
 
-/***/ 49:
+/***/ 60:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_utility_service__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_utility_service__ = __webpack_require__(97);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Item; });
 /**
  * Created by marcofalsitta on 26.05.17.
@@ -174,14 +198,49 @@ var Item = (function () {
 
 /***/ }),
 
-/***/ 50:
+/***/ 61:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Item__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__items_service__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SnackBarMessageComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+/**
+ * Created by marcofalsitta on 31.05.17.
+ */
+var SnackBarMessageComponent = (function () {
+    function SnackBarMessageComponent() {
+        this.message = "none";
+        this.type = "alert";
+    }
+    return SnackBarMessageComponent;
+}());
+SnackBarMessageComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Component */])({
+        selector: 'snack-bar-component-message',
+        template: __webpack_require__(155),
+        styles: [__webpack_require__(154)],
+    })
+], SnackBarMessageComponent);
+
+//# sourceMappingURL=snack-bar-component.js.map
+
+/***/ }),
+
+/***/ 62:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Item__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__items_service__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ItemFormComponent; });
 /**
@@ -205,15 +264,16 @@ var ItemFormComponent = (function () {
         this.itemsService = itemsService;
         this.lockId = true;
         this.isUpdate = false;
-        this.onItemAdded = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* EventEmitter */]();
-        this.onItemRemoved = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* EventEmitter */]();
+        this.devMode = false;
+        this.onItemAdded = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["d" /* EventEmitter */]();
+        this.onItemRemoved = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["d" /* EventEmitter */]();
+        this.onException = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["d" /* EventEmitter */]();
         this.model = new __WEBPACK_IMPORTED_MODULE_1__Item__["a" /* Item */]();
         this.submitted = false;
     }
     ItemFormComponent.prototype.onSubmit = function () {
         var _this = this;
         this.submitted = true;
-        console.log("submitting...", this.submitted);
         if (this.isUpdate) {
             this.itemsService.updateItem(this.model)
                 .then(function (item) {
@@ -228,9 +288,10 @@ var ItemFormComponent = (function () {
             this.itemsService.addItem(this.model).then(function (item) {
                 console.log("added", item);
                 _this.onItemAdded.emit(item);
+                _this.resetForm();
             })
                 .catch(function (error) {
-                console.error(error);
+                _this.onException.emit(error);
             });
         }
     };
@@ -239,8 +300,10 @@ var ItemFormComponent = (function () {
         this.idAtSelectionTime = this.model.id;
         this.isUpdate = true;
     };
+    ItemFormComponent.prototype.onDevModeToggle = function (devMode) {
+        this.devMode = devMode;
+    };
     ItemFormComponent.prototype.onLockToggle = function (event) {
-        console.log("onLockToggle()");
         this.lockId = !this.lockId;
         // this.isUpdate = !this.lockId;
     };
@@ -250,9 +313,6 @@ var ItemFormComponent = (function () {
             this.model.id = event.target.value;
         }
         if (typeof this.idAtSelectionTime !== "undefined") {
-            console.info(this.model.id);
-            console.warn(this.idAtSelectionTime);
-            console.log("___");
             this.isUpdate = this.model.id == this.idAtSelectionTime;
         }
     };
@@ -263,22 +323,26 @@ var ItemFormComponent = (function () {
     return ItemFormComponent;
 }());
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["d" /* Input */])(),
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Input */])(),
     __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["Subject"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["Subject"]) === "function" && _a || Object)
 ], ItemFormComponent.prototype, "parentSubject", void 0);
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Output */])(),
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Output */])(),
     __metadata("design:type", Object)
 ], ItemFormComponent.prototype, "onItemAdded", void 0);
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Output */])(),
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Output */])(),
     __metadata("design:type", Object)
 ], ItemFormComponent.prototype, "onItemRemoved", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Output */])(),
+    __metadata("design:type", Object)
+], ItemFormComponent.prototype, "onException", void 0);
 ItemFormComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Component */])({
         selector: "item-form",
         providers: [__WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */]],
-        template: __webpack_require__(139)
+        template: __webpack_require__(156)
     }),
     __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */]) === "function" && _b || Object])
 ], ItemFormComponent);
@@ -288,7 +352,7 @@ var _a, _b;
 
 /***/ }),
 
-/***/ 74:
+/***/ 87:
 /***/ (function(module, exports) {
 
 function webpackEmptyContext(req) {
@@ -297,20 +361,20 @@ function webpackEmptyContext(req) {
 webpackEmptyContext.keys = function() { return []; };
 webpackEmptyContext.resolve = webpackEmptyContext;
 module.exports = webpackEmptyContext;
-webpackEmptyContext.id = 74;
+webpackEmptyContext.id = 87;
 
 
 /***/ }),
 
-/***/ 75:
+/***/ 88:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(82);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(98);
 
 
 
@@ -323,14 +387,16 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dyna
 
 /***/ }),
 
-/***/ 81:
+/***/ 95:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Item__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__items_service__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__item_add_component__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Item__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__items_service__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__item_add_component__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__common_snack_bar_component__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_material__ = __webpack_require__(36);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -345,13 +411,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var AppComponent = (function () {
-    function AppComponent(itemsService) {
+    function AppComponent(itemsService, snackBar) {
         this.itemsService = itemsService;
+        this.snackBar = snackBar;
         this.item = new __WEBPACK_IMPORTED_MODULE_1__Item__["a" /* Item */]();
         this.items = [];
-        this.title = "Fluance - Test";
+        this.title = "Item List Editor";
+        this.devMode = false;
     }
+    //NOTE:deprecated. The item is always retrieved from the server
     AppComponent.prototype.getItemIndexFromId = function (id) {
         for (var i = 0; i < this.items.length; i++) {
             if (this.items[i].id == id) {
@@ -360,29 +431,29 @@ var AppComponent = (function () {
         }
         return null;
     };
-    AppComponent.prototype.getItem = function (event) {
-        this.itemsService.getItem("123456").then(function (result) {
-            console.log(result);
-        });
+    AppComponent.prototype.setDevMode = function (event) {
+        this.devMode = event.checked;
+        this.itemFormComponent.onDevModeToggle(this.devMode);
     };
     AppComponent.prototype.onItemAdded = function (event) {
-        console.warn("test event binding", event);
+        console.log("onItemAdded event received by app.component", event);
         this.refreshList();
     };
+    AppComponent.prototype.onException = function (error) {
+        this.openSnackBar(error, "alert");
+    };
     AppComponent.prototype.onItemSelect = function (id) {
-        var selectedItem = this.getItemIndexFromId(id);
-        if (selectedItem != null) {
-            this.item = selectedItem;
-            this.itemFormComponent.onSelected(selectedItem);
-        }
-        else {
-            alert("could not find item form id" + id);
-        }
+        var _this = this;
+        this.itemsService.getItem(id).then(function (item) {
+            _this.item = item;
+            _this.itemFormComponent.onSelected(_this.item);
+        }).catch(function (exc) {
+            _this.openSnackBar("could not find item with id " + id, "alert");
+        });
     };
     AppComponent.prototype.onItemRemove = function (id) {
         var _this = this;
         this.itemsService.deleteItem(id).then(function (removedItem) {
-            console.info("removed item ", removedItem);
             _this.refreshList();
         })
             .catch(function (exception) {
@@ -396,15 +467,28 @@ var AppComponent = (function () {
         var _this = this;
         this.itemsService.fetchItems().then(function (items) {
             //reorder items
-            items.sort(function (a, b) {
-                return a.creationDate - b.creationDate;
-            });
-            _this.items = items;
-            _this.item = _this.items[0];
+            if (!items) {
+                _this.openSnackBar("could not fetch items from server", "alert");
+                items = [];
+            }
+            if (items.length > 0) {
+                items.sort(function (a, b) {
+                    return a.creationDate - b.creationDate;
+                });
+                _this.items = items;
+                _this.item = _this.items[0];
+            }
         })
             .catch(function (exception) {
-            console.error(exception);
+            _this.openSnackBar(exception, "alert");
         });
+    };
+    AppComponent.prototype.openSnackBar = function (msg, type) {
+        var currentSnackBar = this.snackBar.openFromComponent(__WEBPACK_IMPORTED_MODULE_4__common_snack_bar_component__["a" /* SnackBarMessageComponent */], {
+            duration: 3000
+        });
+        currentSnackBar.instance.message = msg;
+        currentSnackBar.instance.type = type;
     };
     return AppComponent;
 }());
@@ -413,30 +497,36 @@ __decorate([
     __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__item_add_component__["a" /* ItemFormComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__item_add_component__["a" /* ItemFormComponent */]) === "function" && _a || Object)
 ], AppComponent.prototype, "itemFormComponent", void 0);
 AppComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Component */])({
-        selector: 'my-app',
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Component */])({
+        selector: 'app',
         providers: [__WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */]],
-        template: "\n\n    \n    <div class=\"container\">\n\n      <div>\n        <h1>{{title}}</h1>\n\n        <div class=\"container\" style=\"max-width: 500px;\">\n          <item-form (onItemAdded)=\"onItemAdded($event)\">new form here...</item-form>\n        </div>\n\n\n        <h3>{{items.length > 0 ? items.length: 'Empty'}} item{{items.length > 1 ? 's' : ''}} in the list:</h3>\n        <ul class=\"list-group\">\n          <li *ngFor=\"let item of items\" class=\"list-group-item\">\n            <span class=\"name\">{{item.name}} </span>\n            <span class=\"description\">{{item.description}} </span>\n            <code>{{item.id}}</code>\n            <button class=\"btn\" (click)=\"onItemSelect(item.id)\">select me</button>\n            <button class=\"btn btn-danger\" (click)=\"onItemRemove(item.id)\"> remove me</button>\n          </li>\n        </ul>\n        <!--<p *ngIf=\"items.length > 3\">There are many items!</p>-->\n       \n\n      </div>\n\n\n    \n\n      <button (click)=\"getItem()\">test get item</button>\n\n    </div>\n\n  "
+        entryComponents: [
+            __WEBPACK_IMPORTED_MODULE_4__common_snack_bar_component__["a" /* SnackBarMessageComponent */]
+        ],
+        template: "\n\n    <md-toolbar color=\"primary\">\n\n      <span>{{title}}</span>\n\n      <span class=\"toolbar-spacer\"></span>\n\n      <button md-icon-button [mdMenuTriggerFor]=\"menu\">\n        <md-icon>more_vert</md-icon>\n      </button>\n\n    </md-toolbar>\n\n    <md-menu #menu=\"mdMenu\">\n      <button md-menu-item>\n        <md-icon>settings</md-icon>\n        <span>Settings</span>\n      </button>\n      <button md-menu-item>\n        <md-icon>help</md-icon>\n        <span>Help</span>\n      </button>\n    </md-menu>\n\n\n    <item-form (onException)=\"onException($event)\" (onItemAdded)=\"onItemAdded($event)\">new form here...</item-form>\n\n    <div class=\"itemListContainer\">\n\n      <h3 class=\"listHeader\">{{items.length > 0 ? items.length: 'Empty'}} item{{items.length > 1 ? 's' : ''}} in the list:</h3>\n\n      <md-card *ngFor=\"let item of items\" class=\"itemCard\">\n\n        <md-card-header>\n\n          <div md-card-avatar class=\"example-header-image\"></div>\n          <md-card-title>{{item.name}}</md-card-title>\n          <md-card-subtitle *ngIf=\"devMode\">{{item.id}}</md-card-subtitle>\n          <md-card-content>\n            <p>\n              {{item.description}}\n            </p>\n          </md-card-content>\n\n          <span class=\"toolbar-spacer\"></span>\n\n          <md-card-actions>\n            <button md-raised-button md-button (click)=\"onItemSelect(item.id)\">SELECT</button>\n            <button md-button class=\"deleteItemBtn\" (click)=\"onItemRemove(item.id)\">DELETE</button>\n          </md-card-actions>\n\n        </md-card-header>\n\n      </md-card>\n\n    </div>\n\n    <md-slide-toggle\n      class=\"example-margin\"\n      [color]=\"color\"\n      [checked]=\"checked\"\n      [disabled]=\"disabled\"\n      (change)=\"setDevMode($event)\"\n    >\n      debug mode\n    </md-slide-toggle>\n  "
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__items_service__["a" /* ItemsService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5__angular_material__["k" /* MdSnackBar */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__angular_material__["k" /* MdSnackBar */]) === "function" && _c || Object])
 ], AppComponent);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=app.component.js.map
 
 /***/ }),
 
-/***/ 82:
+/***/ 96:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(79);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__item_add_component__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__items_service__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser_animations__ = __webpack_require__(94);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_material__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_component__ = __webpack_require__(95);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__item_add_component__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__items_service__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__common_snack_bar_component__ = __webpack_require__(61);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -445,6 +535,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 
+
+
+
+//adding animation module to be used with material
 
 
 
@@ -461,11 +555,15 @@ AppModule = __decorate([
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormsModule */],
-            __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* HttpModule */]
+            __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* HttpModule */],
+            __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
+            //materials modules
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["a" /* MdButtonModule */], __WEBPACK_IMPORTED_MODULE_5__angular_material__["b" /* MdCardModule */], __WEBPACK_IMPORTED_MODULE_5__angular_material__["c" /* MdMenuModule */], __WEBPACK_IMPORTED_MODULE_5__angular_material__["d" /* MdToolbarModule */], __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MdIconModule */], __WEBPACK_IMPORTED_MODULE_5__angular_material__["f" /* MdSlideToggleModule */], __WEBPACK_IMPORTED_MODULE_5__angular_material__["g" /* MdInputModule */], __WEBPACK_IMPORTED_MODULE_5__angular_material__["h" /* MdGridListModule */], __WEBPACK_IMPORTED_MODULE_5__angular_material__["i" /* MdListModule */], __WEBPACK_IMPORTED_MODULE_5__angular_material__["j" /* MdSnackBarModule */]
         ],
-        providers: [__WEBPACK_IMPORTED_MODULE_6__items_service__["a" /* ItemsService */]],
-        declarations: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */], __WEBPACK_IMPORTED_MODULE_5__item_add_component__["a" /* ItemFormComponent */]],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */]]
+        providers: [__WEBPACK_IMPORTED_MODULE_8__items_service__["a" /* ItemsService */]],
+        declarations: [__WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */], __WEBPACK_IMPORTED_MODULE_7__item_add_component__["a" /* ItemFormComponent */], __WEBPACK_IMPORTED_MODULE_9__common_snack_bar_component__["a" /* SnackBarMessageComponent */]],
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */]],
+        entryComponents: [__WEBPACK_IMPORTED_MODULE_9__common_snack_bar_component__["a" /* SnackBarMessageComponent */]]
     })
 ], AppModule);
 
@@ -473,11 +571,11 @@ AppModule = __decorate([
 
 /***/ }),
 
-/***/ 83:
+/***/ 97:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(3);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UtilityService; });
 /**
  * Created by marcofalsitta on 26.05.17.
@@ -528,7 +626,7 @@ var UtilityService_1;
 
 /***/ }),
 
-/***/ 84:
+/***/ 98:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -545,5 +643,5 @@ var environment = {
 
 /***/ })
 
-},[166]);
+},[211]);
 //# sourceMappingURL=main.bundle.js.map

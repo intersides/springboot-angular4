@@ -34,7 +34,6 @@ public class Item {
         this.setId(id);
     }
 
-
     public String getId() {
         return id;
     }

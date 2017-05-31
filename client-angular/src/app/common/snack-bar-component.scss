@@ -1,0 +1,30 @@
+.cdk-overlay-container{
+  [role="alert"]{
+    color:white;
+    background-color: red;
+  }
+}
+
+div.snackbar{
+  font-family: 'Roboto';
+  font-style: normal;
+  margin: 12px;
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  &:before{
+    content: "Info:";
+    display: inline-block;
+    margin-right: 5px;
+  }
+  &.alert{
+    color: #b0121d;
+    &:before{
+      content: "Warning:";
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+  }
+}
+

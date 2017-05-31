@@ -20,11 +20,13 @@ export class ItemFormComponent {
   lockId:boolean = true;
   isUpdate:boolean = false;
   idAtSelectionTime:string;
+  devMode:boolean=false;
 
   @Input() parentSubject:Subject<any>;
 
   @Output() onItemAdded = new EventEmitter<Item>();
   @Output() onItemRemoved = new EventEmitter<Item>();
+  @Output() onException = new EventEmitter<any>();
 
 
   constructor(private itemsService:ItemsService){
@@ -34,7 +36,6 @@ export class ItemFormComponent {
 
   onSubmit(){
     this.submitted = true;
-    console.log("submitting...", this.submitted);
 
     if(this.isUpdate){
       this.itemsService.updateItem(this.model)
@@ -50,9 +51,10 @@ export class ItemFormComponent {
       this.itemsService.addItem(this.model).then((item)=>{
         console.log("added",item);
         this.onItemAdded.emit(item);
+        this.resetForm();
       })
         .catch(error=>{
-          console.error(error);
+          this.onException.emit(error);
         })
 
     }
@@ -64,29 +66,22 @@ export class ItemFormComponent {
     this.isUpdate = true;
   }
 
+  onDevModeToggle(devMode:boolean){
+    this.devMode = devMode;
+  }
+
   public onLockToggle(event){
-    console.log("onLockToggle()");
     this.lockId = !this.lockId;
-
     // this.isUpdate = !this.lockId;
-
   }
 
   onKeyUp(event, isId:boolean=false){
     if(isId == true){
       this.model.id = event.target.value;
-
     }
 
-
     if(typeof this.idAtSelectionTime !== "undefined"){
-
-      console.info(this.model.id);
-      console.warn(this.idAtSelectionTime);
-      console.log("___");
-
       this.isUpdate = this.model.id == this.idAtSelectionTime;
-
     }
 
   }

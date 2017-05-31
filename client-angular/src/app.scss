@@ -1,3 +1,51 @@
+body{
+  font-family: 'Roboto';
+  font-style: normal;
+}
+
+item-form{
+  form{
+    padding: 20px;
+  }
+}
+
+.itemListContainer{
+  padding: 20px;
+}
+
+.listHeader {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.deleteItemBtn{
+  background-color: rgba(176, 18, 29, 0.96);
+  border-radius: 10px 0 0 10px;
+  font-size: 16px;
+  .mat-button-wrapper{
+    color : rgb(255, 255, 255);
+  }
+}
+
+.toolbar-spacer{
+  flex-shrink: 1;
+  flex-grow: 1;
+  flex-basis: auto;
+}
+
+.full-width{
+  width: 100%;
+}
+
+#item-card{
+  width: 500px;
+  margin: auto;
+}
+
+.input-card{
+  margin: auto;
+}
+
 .list-group-item{
   display: flex;
   justify-content:space-around;
@@ -9,8 +57,13 @@
 
   code{
     flex-grow: 2;
+    background-color: lightgoldenrodyellow;
   }
 
+}
+
+code{
+  background-color: lightgoldenrodyellow;
 }
 
 .description{

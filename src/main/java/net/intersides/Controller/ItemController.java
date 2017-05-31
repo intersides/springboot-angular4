@@ -77,7 +77,7 @@ public class ItemController {
             return new ItemServiceResponse(HttpStatus.OK, foundItem, result.getMessage()).write();
         }
         else{
-            return new ItemServiceResponse(HttpStatus.BAD_REQUEST, result.getMessage()).write();
+            return new ItemServiceResponse(HttpStatus.INTERNAL_SERVER_ERROR, result.getMessage()).write();
         }
 
     }

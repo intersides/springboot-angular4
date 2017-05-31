@@ -17,10 +17,8 @@ import java.util.Collection;
  */
 
 
-
 @Service
 public class ItemService {
-
 
     static final Logger console = LoggerFactory.getLogger(ItemService.class);
 
@@ -66,10 +64,8 @@ public class ItemService {
     public ServiceResult addItem(Item item) {
 
         if(this.itemDao.isIdPresent(item.getId())){
-            return new ServiceResult(ServiceResult.OperationResult.FAILED, "item is present");
+            return new ServiceResult(ServiceResult.OperationResult.FAILED, "item with the same id already exists");
         }
-
-
 
         Collection<Item> allItems = this.itemDao.getAllItems();
         int itemsCount = allItems.size();
@@ -90,7 +86,7 @@ public class ItemService {
 
     public ServiceResult updateItem(Item item){
         return this.itemDao.update(item)
-                ? new ServiceResult(ServiceResult.OperationResult.SUCCEEDED, "item has been added", item)
+                ? new ServiceResult(ServiceResult.OperationResult.SUCCEEDED, "item has been updated", item)
                 : new ServiceResult(ServiceResult.OperationResult.FAILED, "failed to update item with id "+item.getId());
     }
 

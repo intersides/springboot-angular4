@@ -3,44 +3,83 @@ import {Item} from "./Item";
 import { ItemsService } from "./items.service";
 import { ItemFormComponent } from "./item-add-component";
 
+import { SnackBarMessageComponent} from "./common/snack-bar-component";
+
+import {MdSnackBar} from '@angular/material';
+
 @Component({
-  selector: 'my-app',
+  selector: 'app',
   providers:[ItemsService],
+  entryComponents: [
+    SnackBarMessageComponent
+  ],
   template: `
 
-    
-    <div class="container">
+    <md-toolbar color="primary">
 
-      <div>
-        <h1>{{title}}</h1>
+      <span>{{title}}</span>
 
-        <div class="container" style="max-width: 500px;">
-          <item-form (onItemAdded)="onItemAdded($event)">new form here...</item-form>
-        </div>
+      <span class="toolbar-spacer"></span>
 
+      <button md-icon-button [mdMenuTriggerFor]="menu">
+        <md-icon>more_vert</md-icon>
+      </button>
 
-        <h3>{{items.length > 0 ? items.length: 'Empty'}} item{{items.length > 1 ? 's' : ''}} in the list:</h3>
-        <ul class="list-group">
-          <li *ngFor="let item of items" class="list-group-item">
-            <span class="name">{{item.name}} </span>
-            <span class="description">{{item.description}} </span>
-            <code>{{item.id}}</code>
-            <button class="btn" (click)="onItemSelect(item.id)">select me</button>
-            <button class="btn btn-danger" (click)="onItemRemove(item.id)"> remove me</button>
-          </li>
-        </ul>
-        <!--<p *ngIf="items.length > 3">There are many items!</p>-->
-       
+    </md-toolbar>
 
-      </div>
+    <md-menu #menu="mdMenu">
+      <button md-menu-item>
+        <md-icon>settings</md-icon>
+        <span>Settings</span>
+      </button>
+      <button md-menu-item>
+        <md-icon>help</md-icon>
+        <span>Help</span>
+      </button>
+    </md-menu>
 
 
-    
+    <item-form (onException)="onException($event)" (onItemAdded)="onItemAdded($event)">new form here...</item-form>
 
-      <button (click)="getItem()">test get item</button>
+    <div class="itemListContainer">
+
+      <h3 class="listHeader">{{items.length > 0 ? items.length: 'Empty'}} item{{items.length > 1 ? 's' : ''}} in the list:</h3>
+
+      <md-card *ngFor="let item of items" class="itemCard">
+
+        <md-card-header>
+
+          <div md-card-avatar class="example-header-image"></div>
+          <md-card-title>{{item.name}}</md-card-title>
+          <md-card-subtitle *ngIf="devMode">{{item.id}}</md-card-subtitle>
+          <md-card-content>
+            <p>
+              {{item.description}}
+            </p>
+          </md-card-content>
+
+          <span class="toolbar-spacer"></span>
+
+          <md-card-actions>
+            <button md-raised-button md-button (click)="onItemSelect(item.id)">SELECT</button>
+            <button md-button class="deleteItemBtn" (click)="onItemRemove(item.id)">DELETE</button>
+          </md-card-actions>
+
+        </md-card-header>
+
+      </md-card>
 
     </div>
 
+    <md-slide-toggle
+      class="example-margin"
+      [color]="color"
+      [checked]="checked"
+      [disabled]="disabled"
+      (change)="setDevMode($event)"
+    >
+      debug mode
+    </md-slide-toggle>
   `
 })
 export class AppComponent implements OnInit{
@@ -48,14 +87,17 @@ export class AppComponent implements OnInit{
   item : Item = new Item();
   items: Item[] = [];
 
+  devMode:boolean;
 
-  constructor(private itemsService:ItemsService){
-    this.title = "Fluance - Test";
+  constructor(private itemsService:ItemsService, public snackBar: MdSnackBar){
+    this.title = "Item List Editor";
+    this.devMode = false;
   }
 
   @ViewChild(ItemFormComponent)
   private itemFormComponent: ItemFormComponent;
 
+  //NOTE:deprecated. The item is always retrieved from the server
   private getItemIndexFromId(id: string): any {
 
     for(let i = 0; i < this.items.length; i++){
@@ -68,39 +110,39 @@ export class AppComponent implements OnInit{
 
   }
 
-  getItem(event){
-    this.itemsService.getItem("123456").then((result)=>{
-      console.log(result);
-
-    })
-
+  setDevMode(event){
+    this.devMode = event.checked;
+    this.itemFormComponent.onDevModeToggle(this.devMode);
   }
 
   onItemAdded(event:Item){
-    console.warn("test event binding", event);
+    console.log("onItemAdded event received by app.component", event);
+
     this.refreshList();
   }
 
-  onItemSelect(id:string){
-    let selectedItem = this.getItemIndexFromId(id);
-    if(selectedItem != null){
-      this.item = selectedItem;
-      this.itemFormComponent.onSelected(selectedItem);
+  onException(error:any){
+    this.openSnackBar(error,"alert");
+  }
 
-    }
-    else{
-      alert("could not find item form id"+id);
-    }
+  onItemSelect(id:string){
+
+    this.itemsService.getItem(id).then((item)=>{
+      this.item = item;
+      this.itemFormComponent.onSelected(this.item);
+    }).catch((exc)=>{
+      this.openSnackBar("could not find item with id "+id, "alert");
+    });
+
   }
 
   onItemRemove(id:string){
     this.itemsService.deleteItem(id).then((removedItem:Item)=>{
-      console.info("removed item ", removedItem);
       this.refreshList();
     })
       .catch((exception)=>{
         console.error(exception);
-    });
+      });
   }
 
   ngOnInit(){
@@ -110,16 +152,34 @@ export class AppComponent implements OnInit{
   refreshList(){
     this.itemsService.fetchItems().then((items)=>{
       //reorder items
-      items.sort((a, b)=>{
-        return a.creationDate - b.creationDate;
-      });
+      if(!items){
+        this.openSnackBar("could not fetch items from server", "alert");
+        items = [];
+      }
 
-      this.items = items;
-      this.item = this.items[0];
+      if(items.length > 0){
+
+        items.sort((a, b)=>{
+          return a.creationDate - b.creationDate;
+        });
+
+        this.items = items;
+        this.item = this.items[0];
+
+      }
     })
       .catch((exception)=>{
-      console.error(exception);
+        this.openSnackBar(exception, "alert");
+      });
+  }
+
+  openSnackBar(msg, type) {
+
+    let currentSnackBar = this.snackBar.openFromComponent(SnackBarMessageComponent,{
+      duration: 3000
     });
+    currentSnackBar.instance.message = msg;
+    currentSnackBar.instance.type = type;
   }
 
 }

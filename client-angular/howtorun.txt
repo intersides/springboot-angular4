@@ -1,0 +1,7 @@
+//ANGULAR START
+cd ".client-aungular"
+npm start
+
+//NG BUILD
+cd ".client-aungular"
+ng build --watch

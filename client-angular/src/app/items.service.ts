@@ -102,7 +102,6 @@ export class ItemsService{
     if(typeof error['_body'] == "string"){
       try{
         let errorObj = JSON.parse(error['_body']);
-        console.error(errorObj["msg"]);
         return Promise.reject(errorObj["msg"]);
 
       }
@@ -112,7 +111,7 @@ export class ItemsService{
 
     }
     else{
-      console.error("trapped error is malformes, does not contains _body part");
+      console.error("trapped error is malformed, does not contains _body part");
     }
   }
 
