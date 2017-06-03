@@ -68,6 +68,18 @@ public class ItemDaoStaticData implements ItemDao {
     }
 
     @Override
+    public boolean insertConditional(int rowLimits, Item item){
+        if(items.size() < 5){
+            Item newItem = items.putIfAbsent(item.getId(), item);
+            return newItem == null;
+        }
+        else{
+            return false;
+        }
+
+    }
+
+    @Override
     public boolean delete(String id){
         Item removedItem = items.remove(id);
         return removedItem != null;

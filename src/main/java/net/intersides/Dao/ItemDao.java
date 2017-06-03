@@ -17,6 +17,8 @@ public interface ItemDao {
 
     boolean create(Item item);
 
+    boolean insertConditional(int rowLimits, Item item);
+
     Item read(String id);
 
     boolean update(Item item);

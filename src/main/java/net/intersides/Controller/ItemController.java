@@ -109,7 +109,7 @@ public class ItemController {
             return new ItemServiceResponse(HttpStatus.BAD_REQUEST, "Missing mandatory data from client").write();
         }
 
-        ServiceResult result = this.itemService.addItem(item);
+        ServiceResult result = this.itemService.addItemCondition(item);
         if(result.getResult() == ServiceResult.OperationResult.SUCCEEDED){
             return new ItemServiceResponse(HttpStatus.OK, result.getItem(), result.getMessage()).write();
         }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -63,6 +64,21 @@ public class ItemService {
                 : new ServiceResult(ServiceResult.OperationResult.FAILED, "failed to remove item with id "+id);
     }
 
+
+    public ServiceResult addItemCondition(Item item) {
+
+        boolean result = this.itemDao.insertConditional(5, item);
+
+        if(result){
+            return new ServiceResult(ServiceResult.OperationResult.SUCCEEDED, "item has been added", item);
+        }
+        else{
+            return new ServiceResult(ServiceResult.OperationResult.FAILED, "failed to create item in database");
+        }
+
+    }
+
+    @Transactional
     public ServiceResult addItem(Item item) {
 
         if(this.itemDao.isIdPresent(item.getId())){

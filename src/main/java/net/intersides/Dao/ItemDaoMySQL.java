@@ -12,6 +12,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -57,6 +58,18 @@ public class ItemDaoMySQL implements ItemDao {
     @Override
     public void removeAllItems(){
         jdbcTemplate.update("TRUNCATE TABLE items");
+    }
+
+    @Override
+    @Transactional
+    public boolean insertConditional(int rowLimits, Item item){
+
+        String statement = "INSERT INTO items(id, name, description) " +
+                "SELECT ?, ?, ? FROM Dual " +
+                "WHERE (SELECT COUNT(*) FROM items) < ?";
+        int updatedRows = jdbcTemplate.update(statement, item.getId(), item.getName(), item.getDescription(), rowLimits);
+        return updatedRows == 1;
+
     }
 
     @Override
