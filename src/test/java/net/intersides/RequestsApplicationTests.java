@@ -4,15 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.intersides.Entity.Item;
-import net.intersides.utilities.Utilities;
-import org.hamcrest.CoreMatchers;
-import org.json.JSONException;
 import org.json.simple.JSONObject;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.embedded.LocalServerPort;
@@ -20,13 +15,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Collection;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,6 +39,8 @@ public class RequestsApplicationTests {
 
     @LocalServerPort
     private int port;
+
+    private String contextPath = "/marcofalsitta";
 
     TestRestTemplate restTemplate = new TestRestTemplate();
 
@@ -93,8 +90,8 @@ public class RequestsApplicationTests {
                 HttpMethod.PUT, itemEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getStatusCode().value()).isEqualTo(400);
         assertThat(response.getBody()).contains("Missing mandatory data from client");
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
 
     }
 
@@ -257,7 +254,17 @@ public class RequestsApplicationTests {
 
 
     private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + uri;
+
+        try {
+            InetAddress localHost = InetAddress.getLocalHost();
+            String url = "http://"+localHost.getHostAddress()+":"+ port+contextPath+uri;
+            console.info("using url:"+url);
+            return url;
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
 

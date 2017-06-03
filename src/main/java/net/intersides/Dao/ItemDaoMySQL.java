@@ -1,6 +1,8 @@
 package net.intersides.Dao;
 
 import net.intersides.Entity.Item;
+import org.springframework.core.env.Environment;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,10 @@ public class ItemDaoMySQL implements ItemDao {
     @Autowired //use the application properties attributes for connections
     private JdbcTemplate jdbcTemplate;
 
+    public ItemDaoMySQL(){
+
+    }
+
     private static class ItemRowMapper implements RowMapper<Item>{
         @Override
         public Item mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -45,19 +51,19 @@ public class ItemDaoMySQL implements ItemDao {
 
     @Override
     public Collection<Item> getAllItems() {
-        return jdbcTemplate.query("SELECT * FROM `fluance`.`items`;", new ItemRowMapper());
+        return jdbcTemplate.query("SELECT * FROM `items`;", new ItemRowMapper());
     }
 
     @Override
     public void removeAllItems(){
-        jdbcTemplate.update("TRUNCATE TABLE fluance.items");
+        jdbcTemplate.update("TRUNCATE TABLE items");
     }
 
     @Override
     public boolean create(Item item) {
 
         try {
-            jdbcTemplate.update("INSERT INTO fluance.items (id, name, description) VALUES(?, ?, ?);", item.getId(), item.getName(), item.getDescription());
+            jdbcTemplate.update("INSERT INTO items (id, name, description) VALUES(?, ?, ?);", item.getId(), item.getName(), item.getDescription());
         }
         catch (DataAccessException ex){
             console.warn("item -> "+item.toString());
@@ -75,7 +81,7 @@ public class ItemDaoMySQL implements ItemDao {
         Item item;
         try{
             item = jdbcTemplate.queryForObject(
-                    "SELECT * FROM `fluance`.`items` WHERE id = ?;",
+                    "SELECT * FROM `items` WHERE id = ?;",
                     new ItemRowMapper(), id);
 
         }catch(EmptyResultDataAccessException exc){
@@ -92,20 +98,20 @@ public class ItemDaoMySQL implements ItemDao {
         final String description = item.getDescription();
 
         int updatedRows = jdbcTemplate.update(
-                "UPDATE fluance.items SET name = ?, description = ? WHERE items.id = ?;", name, description, id);
+                "UPDATE items SET name = ?, description = ? WHERE items.id = ?;", name, description, id);
         return updatedRows != 0;
     }
 
 
     @Override
     public boolean delete(String id) {
-        int removedRows = jdbcTemplate.update("DELETE FROM fluance.items WHERE id = ?;", id);
+        int removedRows = jdbcTemplate.update("DELETE FROM items WHERE id = ?;", id);
         return removedRows == 1;
     }
 
     @Override
     public boolean isIdPresent(String id){
-        String sql = "SELECT COUNT(*) FROM `fluance`.`items` WHERE items.id = ?";
+        String sql = "SELECT COUNT(*) FROM `items` WHERE items.id = ?";
         return 1 == jdbcTemplate.queryForObject(sql, new Object[] { id }, Integer.class);
     }
 

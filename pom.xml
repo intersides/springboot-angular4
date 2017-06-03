@@ -40,7 +40,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -84,6 +83,7 @@
             <version>2.8.0</version>
         </dependency>
 
+
     </dependencies>
 
     <build>
@@ -93,6 +93,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+
     </build>
 
 

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -27,12 +28,13 @@ public class ItemService {
 //    @Qualifier("staticData")
     private ItemDao itemDao;
 
-
     public void removeAllItems(){
         this.itemDao.removeAllItems();
     }
 
     public ServiceResult getAllItems(){
+
+
         Collection<Item> allItems = this.itemDao.getAllItems();
         if(allItems != null){
             return new ServiceResult(ServiceResult.OperationResult.SUCCEEDED, "all items have been fetched", allItems);
