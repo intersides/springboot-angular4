@@ -35,6 +35,7 @@ export class ItemsService{
   private onFreezeItemEditingSubscription:any;
   private onUnfreezeItemSubscription:any;
   private itemsListModifiedSubscription:any;
+  private itemUpdartedSubscription:any;
 
   constructor(private messageService: MessageService, http:Http, private stomp:StompService){
     this.http = http;
@@ -67,6 +68,12 @@ export class ItemsService{
         console.warn("list changed could be triggered for onItemAdded or onItemRemove");
         this.dispatchWSMessages(data);
       });
+
+      stomp.subscribe('/topic/onRefreshItem', data=>{
+        console.warn("individual item has been modified", data);
+        this.dispatchWSMessages(data);
+      });
+
 
       //unsubscribe
       // this.subscription.unsubscribe();
@@ -184,6 +191,14 @@ export class ItemsService{
         })
       }break;
 
+      case "onItemUpdated":{
+        this.messageService.dispatchUiMessage({
+          type:"onUserUpdatedItem",
+          itemId:wsData.itemId,
+          clientId:wsData.clientId
+        })
+      }break;
+
       // case "onConnectionEstablished":{
       //   console.info("sessionId:", wsData.data.sessionId);
       //
@@ -278,6 +293,21 @@ export class ItemsService{
 
   }
 
+  getItemPromise(itemId): Promise<Item>{
+
+    let options = new RequestOptions({
+      headers:this.headers
+    });
+
+    return this.http.post(this.host+"/item", {id:itemId}, options).toPromise()
+      .then(response =>{
+        console.log(response.json().msg);
+        return response.json().data;
+      })
+      .catch(this.handleError);
+  }
+
+
   addItem(item:Item){
 
     this.http.put(this.host+"/item", item, this.headers)
@@ -307,6 +337,10 @@ export class ItemsService{
             type: "onItemUpdated",
             data: response.json().data
           });
+
+          //broadcast event to other user that an item has been updated
+          this.stomp.send('/app/onItemUpdated',
+            {'type': 'onItemUpdated', 'itemId': item.id, 'clientId':this.wsSessionId});
 
         }, error=>{
           this.handleError(error, "Cannot retrieve items from server.");

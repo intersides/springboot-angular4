@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.intersides.Entity.BroadcastMessage;
 
+import net.intersides.Entity.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,23 +25,24 @@ public class StompController {
     @MessageMapping("/onEditItemStarted")
     @SendTo("/topic/onFreezeItemEditing")
     public BroadcastMessage onEditItemStarted(BroadcastMessage message) throws Exception {
-        console.info("onEditItemStarted received");
         return new BroadcastMessage("onFreezeItemEditing", message.getItemId(), message.getClientId());
     }
 
     @MessageMapping("/onEditItemEnded")
     @SendTo("/topic/onUnfreezeItemEditing")
     public BroadcastMessage onEditItemEnded(BroadcastMessage message) throws Exception {
-        console.info("onUnfreezeItemEditing received");
         return new BroadcastMessage("onUnfreezeItemEditing", message.getItemId(), message.getClientId());
     }
 
     @MessageMapping("/onItemsListChanged")
     @SendTo("/topic/onRefreshItemList")
     public BroadcastMessage onItemsListChanged(BroadcastMessage message) throws Exception {
-        console.info("onItemsListChanged received");
-        console.info("onItemsListChanged received");
-        //message.getType() --> onItemRemoved, onItemAdded
+        return new BroadcastMessage(message.getType(), message.getItemId(), message.getClientId());
+    }
+
+    @MessageMapping("/onItemUpdated")
+    @SendTo("/topic/onRefreshItem")
+    public BroadcastMessage onItemUpdated(BroadcastMessage message) throws Exception {
         return new BroadcastMessage(message.getType(), message.getItemId(), message.getClientId());
     }
 

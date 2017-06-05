@@ -195,25 +195,19 @@ export class AppComponent implements OnInit, OnDestroy{
         console.info("UI_CHANGES:", msg.itemId, msg.clientId);
 
         let itemId = msg.itemId;
-        let item = this.getItemById(itemId);
-        if(!item){
-          console.error("could not find item with id", itemId);
+
+        //lock item if the operation belongs to a different user than us.
+        let userId = msg.clientId;
+        if(this.itemsService.wsSessionId !== userId){
+
+          let message = "Another user has added an item in the list. The items list will be refreshed";
+          this.openSnackBar(message, "info");
+
+          setTimeout(()=>{
+            this.refreshList();
+          }, 3000);
+
         }
-        else {
-          //lock item if the operation belongs to a different user than us.
-          let userId = msg.clientId;
-          if(this.itemsService.wsSessionId !== userId){
-
-            let message = "Another user has added an item in the list. The items list will be refreshed";
-            this.openSnackBar(message, "info");
-
-            setTimeout(()=>{
-              this.refreshList();
-            }, 3000);
-
-          }
-        }
-
       }break;
 
 
@@ -233,9 +227,39 @@ export class AppComponent implements OnInit, OnDestroy{
 
         }
 
-
       }break;
 
+        // onUserUpdatedItem
+      case "onUserUpdatedItem":{
+        console.info("UI_CHANGES:", msg);
+
+        let itemId = msg.itemId;
+        let item = this.getItemById(itemId);
+        if(!item){
+          console.error("could not find item with id", itemId);
+        }
+        else {
+          //lock item if the operation belongs to a different user than us.
+          let userId = msg.clientId;
+          if(this.itemsService.wsSessionId !== userId){
+            this.itemsService.getItemPromise(itemId).then(_item=>{
+              //set the existing item with the retrieved item
+              // item=_item;
+              item.id = _item.id;
+              item.name = _item.name;
+              item.description = _item.description;
+
+              //flash on changes.
+
+            })
+              .catch(exc=>{
+                console.error("error in getting item promise", exc);
+              });
+          }
+        }
+
+
+      }break;
 
       default:{
         console.warn("untrapped case for %s", msg.type);
@@ -257,6 +281,7 @@ export class AppComponent implements OnInit, OnDestroy{
         this.drawList(msg.data);
       }break;
 
+      case "onItemUpdated":
       case "onItemAdded":
       case "onItemDeleted":{
         this.refreshList();
