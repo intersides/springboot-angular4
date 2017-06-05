@@ -50,6 +50,12 @@ code {
 .description {
   font-weight: 800; }
 
+.edit-card-switch {
+  position: absolute;
+  right: 0;
+  margin: 10px;
+  top: 0; }
+
 .itemCard[data-editlock="true"] {
   background-color: rgba(211, 211, 211, 0.19); }
   .itemCard[data-editlock="true"] button {

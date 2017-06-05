@@ -13,6 +13,9 @@ import { ItemsService} from './items.service';
 import { MessageService} from './MessageService';
 import { SnackBarMessageComponent} from "./common/snack-bar-component";
 
+import { StompService } from 'ng2-stomp-service';
+
+
 
 @NgModule({
   imports:      [
@@ -23,7 +26,7 @@ import { SnackBarMessageComponent} from "./common/snack-bar-component";
     //materials modules
     MdButtonModule, MdCardModule, MdMenuModule, MdToolbarModule, MdIconModule, MdSlideToggleModule, MdInputModule, MdGridListModule, MdListModule, MdSnackBarModule
   ],
-  providers: [ItemsService, MessageService],
+  providers: [ItemsService, MessageService, StompService],
   declarations: [ AppComponent, ItemFormComponent, SnackBarMessageComponent ],
   bootstrap:    [ AppComponent],
   entryComponents: [SnackBarMessageComponent]

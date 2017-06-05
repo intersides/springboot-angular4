@@ -64,7 +64,7 @@ import { SnackBarMessageComponent} from "./common/snack-bar-component";
           <span class="toolbar-spacer"></span>
 
           <md-card-actions>
-            <button md-raised-button md-button (click)="onItemSelect(item.id)" >SELECT</button>
+            <button md-raised-button md-button (click)="onItemSelect(item.id)" disabled="{{item.isLocked ? true : false}}" >SELECT</button>
             <button md-button class="deleteItemBtn" (click)="onItemRemove(item.id)" disabled="{{item.isLocked ? true : false}}" >DELETE</button>
           </md-card-actions>
 
@@ -134,11 +134,11 @@ export class AppComponent implements OnInit, OnDestroy{
     console.log("connectionChangesDispatcher", message);
     switch(message.type){
 
-      case "onConnectionEstablished":{
-        console.warn("onConnectionEstablished sessionId", message.sessionId);
-        this.itemsService.wsSessionId = message.sessionId;
-
-      }break;
+      // case "onConnectionEstablished":{
+      //   console.warn("onConnectionEstablished sessionId", message.sessionId);
+      //   this.itemsService.wsSessionId = message.sessionId;
+      //
+      // }break;
 
       default:{
         console.warn("no case for %s", message.type);
@@ -148,20 +148,22 @@ export class AppComponent implements OnInit, OnDestroy{
 
 
   uiChangesDispatcher(msg){
+
     console.info("UI_CHANGES:", msg);
+
     switch(msg.type){
 
       case "onUserBeginEditingItem":{
 
-        console.info("UI_CHANGES:", msg.data);
-        let itemId = msg.data.itemId;
+        console.info("UI_CHANGES:", msg.itemId, msg.clientId);
+        let itemId = msg.itemId;
         let item = this.getItemById(itemId);
         if(!item){
           console.error("could not find item with id", msg.itemId);
         }
         else {
           //lock item if the operation belongs to a different user than us.
-          let userId = msg.data.userId;
+          let userId = msg.clientId;
           if(this.itemsService.wsSessionId !== userId){
             item.isLocked = true;
           }
@@ -171,19 +173,66 @@ export class AppComponent implements OnInit, OnDestroy{
 
       case "onUserStoppedEditingItem":{
 
-        console.info("UI_CHANGES:", msg.data);
-        let itemId = msg.data.itemId;
+        console.info("UI_CHANGES:", msg.itemId, msg.clientId);
+
+        let itemId = msg.itemId;
         let item = this.getItemById(itemId);
         if(!item){
           console.error("could not find item with id", itemId);
         }
         else {
           //lock item if the operation belongs to a different user than us.
-          let userId = msg.data.userId;
+          let userId = msg.clientId;
           if(this.itemsService.wsSessionId !== userId){
             item.isLocked = false;
           }
         }
+
+      }break;
+
+
+      case "onUserRemovedItem":{
+        console.info("UI_CHANGES:", msg.itemId, msg.clientId);
+
+        let itemId = msg.itemId;
+        let item = this.getItemById(itemId);
+        if(!item){
+          console.error("could not find item with id", itemId);
+        }
+        else {
+          //lock item if the operation belongs to a different user than us.
+          let userId = msg.clientId;
+          if(this.itemsService.wsSessionId !== userId){
+
+            let message = "Another user has added an item in the list. The items list will be refreshed";
+            this.openSnackBar(message, "info");
+
+            setTimeout(()=>{
+              this.refreshList();
+            }, 3000);
+
+          }
+        }
+
+      }break;
+
+
+      case "onUserAddedItem":{
+        console.info("UI_CHANGES:", msg.itemId, msg.clientId);
+
+        //lock item if the operation belongs to a different user than us.
+        let userId = msg.clientId;
+        if(this.itemsService.wsSessionId !== userId){
+
+          let message = "Another user has added an item in the list. The items list will be refreshed";
+          this.openSnackBar(message, "info");
+
+          setTimeout(()=>{
+            this.refreshList();
+          }, 3000);
+
+        }
+
 
       }break;
 

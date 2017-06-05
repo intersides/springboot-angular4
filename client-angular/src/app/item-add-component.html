@@ -3,6 +3,13 @@
 
   <md-card id="item-card">
     <md-card-header>
+      <md-slide-toggle class="edit-card-switch"
+        [color]="color"
+        [checked]="checked"
+        [disabled]="disabled"
+        (change)="onEditToggle($event)">edit card
+      </md-slide-toggle>
+
       <md-card-title>{{isUpdate ? 'Modify' : 'Add'}} Item</md-card-title>
     </md-card-header>
     <md-card-content>

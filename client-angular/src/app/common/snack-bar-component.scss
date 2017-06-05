@@ -3,6 +3,11 @@
     color:white;
     background-color: red;
   }
+
+  [role="info"]{
+    color:white;
+    background-color: lightskyblue;
+  }
 }
 
 div.snackbar{
@@ -26,5 +31,16 @@ div.snackbar{
     }
 
   }
+
+  &.info{
+    color: #5fa0d8;
+    &:before{
+      content: "Warning:";
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+  }
+
 }
 

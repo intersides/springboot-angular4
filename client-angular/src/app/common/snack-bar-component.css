@@ -1,6 +1,9 @@
 .cdk-overlay-container [role="alert"] {
   color: white;
   background-color: red; }
+.cdk-overlay-container [role="info"] {
+  color: white;
+  background-color: lightskyblue; }
 
 div.snackbar {
   font-family: 'Roboto';
@@ -16,6 +19,12 @@ div.snackbar {
   div.snackbar.alert {
     color: #b0121d; }
     div.snackbar.alert:before {
+      content: "Warning:";
+      display: inline-block;
+      margin-right: 5px; }
+  div.snackbar.info {
+    color: #5fa0d8; }
+    div.snackbar.info:before {
       content: "Warning:";
       display: inline-block;
       margin-right: 5px; }

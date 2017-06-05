@@ -19,6 +19,7 @@ export class ItemFormComponent{
   public model:Item;
   private submitted:boolean;
   lockId:boolean = true;
+  editMode:boolean = false;
   isUpdate:boolean = false;
   idAtSelectionTime:string;
   devMode:boolean=false;
@@ -95,10 +96,13 @@ export class ItemFormComponent{
   }
 
   onSelected(selectedItem:Item){
+    let currentItem = this.model;
+    console.error("onSelect... currentItem :", currentItem);
+
     this.model = new Item(selectedItem);
     this.idAtSelectionTime = this.model.id;
     this.isUpdate = true;
-    this.setEditMode();
+    // this.setEditMode();
   }
 
   onDevModeToggle(devMode:boolean){
@@ -109,6 +113,13 @@ export class ItemFormComponent{
     this.lockId = !this.lockId;
   }
 
+  public onEditToggle(event){
+    this.editMode = !this.editMode;
+    this.setEditMode();
+
+  }
+
+
   onKeyUp(event, isId:boolean=false){
     if(isId == true){
       this.model.id = event.target.value;
@@ -116,15 +127,18 @@ export class ItemFormComponent{
 
     if(typeof this.idAtSelectionTime !== "undefined"){
       this.isUpdate = this.model.id == this.idAtSelectionTime;
-      this.setEditMode();
+      // this.setEditMode();
     }
 
   }
 
   setEditMode(){
-    console.error("edit mode", this.isUpdate, this.idAtSelectionTime, this.model.id);
 
-    if(this.isUpdate == true){
+    console.error("edit mode", this.isUpdate, this.idAtSelectionTime, this.model.id, this.editMode);
+
+
+    if(this.editMode == true){
+      //NOTE:dispatch event that should reach the server and broadcast to all connected users that this item is in editing mode
       this.messageService.dispatchWSSendMsg({
         type:"onEditItemStarted",
         // data:this.model
@@ -138,13 +152,13 @@ export class ItemFormComponent{
       });
     }
 
-
   }
 
   resetForm(){
     this.model = new Item();
     this.isUpdate = false;
-    this.setEditMode();
+    this.editMode = false;
+    // this.setEditMode();
   }
 
 

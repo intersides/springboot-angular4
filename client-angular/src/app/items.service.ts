@@ -8,6 +8,10 @@ import {Http, RequestOptions, Headers} from "@angular/http";
 
 import {MessageService, ObservableType} from "./MessageService";
 
+import { StompService } from 'ng2-stomp-service';
+
+
+// private subscription : any;
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -16,11 +20,10 @@ import {Subscription} from "rxjs/Subscription";
 @Injectable()
 export class ItemsService{
 
-
   private host = "/marcofalsitta";
   private http:Http;
   private wsIsOpen = false;
-  private _wsSessionId = null;
+  private _wsSessionId:string = null;
 
   subscription_webSocketService:Subscription;
   subscription_httpServicesRequest:Subscription;
@@ -29,8 +32,52 @@ export class ItemsService{
   private ws:WebSocket;
   private headers = new Headers({'Content-Type': 'application/json'});
 
-  constructor(private messageService: MessageService, http:Http){
+  private onFreezeItemEditingSubscription:any;
+  private onUnfreezeItemSubscription:any;
+  private itemsListModifiedSubscription:any;
+
+  constructor(private messageService: MessageService, http:Http, private stomp:StompService){
     this.http = http;
+
+    //configuration
+    stomp.configure({
+      host:'/marcofalsitta/ws-tunnel',
+      debug:true,
+      queue:{'init':false}
+    });
+
+    //start connection
+    stomp.startConnect().then((arg) => {
+      stomp.done('init');
+
+      console.warn("******");
+      this.wsSessionId = stomp['socket']['_server'];
+      console.warn("websocket session id:", this.wsSessionId);
+      console.warn("******");
+
+      this.onFreezeItemEditingSubscription = stomp.subscribe('/topic/onFreezeItemEditing', data=>{
+        this.dispatchWSMessages(data);
+      });
+
+      this.onUnfreezeItemSubscription = stomp.subscribe('/topic/onUnfreezeItemEditing', data=>{
+        this.dispatchWSMessages(data);
+      });
+
+      this.itemsListModifiedSubscription = stomp.subscribe('/topic/onRefreshItemList', data=>{
+        console.warn("list changed could be triggered for onItemAdded or onItemRemove");
+        this.dispatchWSMessages(data);
+      });
+
+      //unsubscribe
+      // this.subscription.unsubscribe();
+
+      //disconnect
+      // stomp.disconnect().then(() => {
+      //   console.log( 'Connection closed' )
+      // })
+
+    });
+
 
     this.subscription_webSocketService = this.messageService.getSubscription(ObservableType.WEB_SOCKET_MESSAGE_SENDING).subscribe(message=>{
       this.wsMessageDispatcher(message);
@@ -46,26 +93,20 @@ export class ItemsService{
     //   this.connectionChangesDispatcher(message);
     // });
 
-    this.webSocketConnect();
-    this.registerWSHandlers();
   }
 
-  webSocketConnect(){
-    try{
-      this.ws = new WebSocket("ws://localhost:8080/marcofalsitta/itemAppWS");
-    }
-    catch(exc){
-      console.error(exc);
-    }
-
+  //response
+  response(data){
+    console.log(data);
   }
 
 
-  get wsSessionId(): any {
+
+  get wsSessionId(): string {
     return this._wsSessionId;
   }
 
-  set wsSessionId(value: any) {
+  set wsSessionId(value: string) {
     this._wsSessionId = value;
   }
 
@@ -78,43 +119,23 @@ export class ItemsService{
     else {
 
       switch (message.type) {
-        case "onOpen": {
-          console.log("onOpen received... start heartbeat");
-          this.startHeartbeat(5);
-        }
-          break;
 
         case "onEditItemStarted": {
           console.log("onEditItemStarted received, send message to server for broadcasting", message);
-          this.ws.send(JSON.stringify({type: "onEditItemStarted", itemId: message.itemId, userId:this.wsSessionId}));
+
+          this.stomp.send('/app/onEditItemStarted',
+              {'type': 'onEditItemStarted', 'itemId': message.itemId, 'clientId':this.wsSessionId});
+
         }break;
 
         case "onEditItemEnded": {
           console.log("onEditItemEnded received, send message to server for broadcasting", message);
-          this.ws.send(JSON.stringify({type: "onEditItemEnded", itemId: message.itemId, userId:this.wsSessionId}));
+
+          this.stomp.send('/app/onEditItemEnded',
+            {'type': 'onEditItemEnded', 'itemId': message.itemId, 'clientId':this.wsSessionId});
+
         }break;
 
-
-
-        case "onMessage": {
-          let data = null;
-
-          if (typeof message['wsEvent'] !== "undefined") {
-            try {
-              data = JSON.parse(message['wsEvent'].data);
-            }
-            catch (exc) {
-              console.error("cannot parse data in wsEvent", message['wsEvent'].data);
-              console.error(exc);
-            }
-          }
-
-          if (data) {
-            this.dispatchWSMessages(data);
-          }
-
-        }
-          break;
 
         default: {
           console.warn("no handler for '%s' message type ", message.type);
@@ -123,35 +144,55 @@ export class ItemsService{
       }
 
     }
+
   }
 
   dispatchWSMessages(wsData){
+    console.log(wsData);
+
     switch(wsData.type){
 
       case "onFreezeItemEditing":{
         this.messageService.dispatchUiMessage({
           type:"onUserBeginEditingItem",
-          data:wsData.data
+          itemId:wsData.itemId,
+          clientId:wsData.clientId
         })
       }break;
 
       case "onUnfreezeItemEditing":{
         this.messageService.dispatchUiMessage({
           type:"onUserStoppedEditingItem",
-          data:wsData.data
+          itemId:wsData.itemId,
+          clientId:wsData.clientId
         })
       }break;
 
-      case "onConnectionEstablished":{
-        console.info("sessionId:", wsData.data.sessionId);
-
-        this.messageService.broadcastConnectionChangesEvent({
-          type:"onConnectionEstablished",
-          sessionId:wsData.data.sessionId,
-        });
-
+      case "onItemAdded":{
+        this.messageService.dispatchUiMessage({
+          type:"onUserAddedItem",
+          itemId:wsData.itemId,
+          clientId:wsData.clientId
+        })
       }break;
 
+      case "onItemRemoved":{
+        this.messageService.dispatchUiMessage({
+          type:"onUserRemovedItem",
+          itemId:wsData.itemId,
+          clientId:wsData.clientId
+        })
+      }break;
+
+      // case "onConnectionEstablished":{
+      //   console.info("sessionId:", wsData.data.sessionId);
+      //
+      //   this.messageService.broadcastConnectionChangesEvent({
+      //     type:"onConnectionEstablished",
+      //     sessionId:wsData.data.sessionId,
+      //   });
+      //
+      // }break;
 
 
       default:{
@@ -192,47 +233,6 @@ export class ItemsService{
       }break;
     }
   }
-
-  registerWSHandlers(){
-
-    this.ws.onopen =  event =>{
-      this.wsIsOpen = true;
-      this.messageService.dispatchWSSendMsg({type:"onOpen", wsEvent:event});
-    };
-
-    this.ws.onmessage = event =>{
-      this.messageService.dispatchWSSendMsg({type:"onMessage", wsEvent:event});
-    };
-
-    this.ws.onclose = event =>{
-      this.wsIsOpen = false;
-      console.error("closed", event);
-    };
-
-    this.ws.onerror = event =>{
-      console.error("ws error ", event);
-    };
-
-
-  }
-
-  startHeartbeat(seconds:number){
-    setInterval(()=>{
-      console.log("\u2665");
-
-      if(!this.wsIsOpen){
-        console.log("try to reconnect to websocket...");
-        this.webSocketConnect();
-      }
-      else{
-        if(this.ws.readyState == 1){
-          this.ws.send(JSON.stringify({type:"onHeartBeat"}));
-        }
-
-      }
-    }, seconds*1000);
-  }
-
 
   fetchItems(){
 
@@ -288,6 +288,10 @@ export class ItemsService{
             type: "onItemAdded",
             data: response.json().data as Item
           });
+          //broadcast event to other user throught webSocket server
+          this.stomp.send('/app/onItemsListChanged',
+            {'type': 'onItemAdded', 'itemId': item.id, 'clientId':this.wsSessionId});
+
         },error=>{
           this.handleError(error, "Could not add item.");
         });
@@ -317,6 +321,7 @@ export class ItemsService{
       body:{id:itemId}
     });
 
+    //NOTE: DELETE item Rest
     this.http.delete(this.host+"/item", options)
       .subscribe(
         response=>{
@@ -325,6 +330,12 @@ export class ItemsService{
             type: "onItemDeleted",
             data: response.json().data
           });
+
+          //broadcast event to other user throught webSocket server
+          this.stomp.send('/app/onItemsListChanged',
+            {'type': 'onItemRemoved', 'itemId': itemId, 'clientId':this.wsSessionId});
+
+
         }, error=>{
           this.handleError(error, "Cannot delete item from server.");
         });
