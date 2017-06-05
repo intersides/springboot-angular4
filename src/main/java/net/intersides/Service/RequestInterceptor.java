@@ -31,24 +31,28 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
         String requestURI = request.getRequestURI();
         String contentType = request.getContentType();
+        String protocol = request.getProtocol();
+        StringBuffer url = request.getRequestURL();
 
         console.warn("request uri:"+requestURI);
         console.warn("content type:"+contentType);
+        console.warn("protocol:"+protocol);
+        console.warn("url:"+url);
 
-        if(contentType == null || !contentType.contentEquals("application/json")){
-            console.error("preHandle error detection on content type:"+contentType);
-            console.error("this content type is not allowed");
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-
-            JsonObject jo = new JsonObject();
-            jo.addProperty("msg","wrong content type");
-
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(jo.toString());
-            return false;
-
-        }
+//        if(contentType == null || !contentType.contentEquals("application/json")){
+//            console.error("preHandle error detection on content type:"+contentType);
+//            console.error("this content type is not allowed");
+//            response.setStatus(HttpStatus.FORBIDDEN.value());
+//
+//            JsonObject jo = new JsonObject();
+//            jo.addProperty("msg","wrong content type");
+//
+//            response.setContentType("application/json");
+//            response.setCharacterEncoding("UTF-8");
+//            response.getWriter().write(jo.toString());
+//            return false;
+//
+//        }
 
         //Integer id = ServletRequestUtils.getIntParameter(request, "id", 0);
 

@@ -17,6 +17,7 @@ export class Item{
   name:string=null;
   description:string=null;
   creationDate:number = new Date().getTime();
+  isLocked:boolean=false;
 
   constructor(iITem?:IItem){
     this.id = UtilityService.getInstance().generateUUID();
@@ -31,9 +32,11 @@ export class Item{
         this.creationDate = iITem.creationDate;
       }
     }
+    this.isLocked = false;
   }
 
   get diagnostic(){
     return JSON.stringify(this, null, "\t");
   }
+
 }

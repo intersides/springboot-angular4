@@ -3,17 +3,18 @@
  */
 
 import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {Item} from "./Item";
-import {ItemsService} from "./items.service"
 import {Subject} from "rxjs/Subject";
+import { Subscription } from "rxjs/Subscription";
 
+import {MessageService, ObservableType} from "./MessageService";
+
+import {Item} from "./Item";
 
 @Component({
   selector:"item-form",
-  providers:[ItemsService],
   templateUrl:"./item-add-component.html"
 })
-export class ItemFormComponent {
+export class ItemFormComponent{
 
   public model:Item;
   private submitted:boolean;
@@ -22,40 +23,73 @@ export class ItemFormComponent {
   idAtSelectionTime:string;
   devMode:boolean=false;
 
-  @Input() parentSubject:Subject<any>;
+  subscription_httpServiceRequest:Subscription;
+  subscription_httpServiceResponse:Subscription;
 
-  @Output() onItemAdded = new EventEmitter<Item>();
-  @Output() onItemRemoved = new EventEmitter<Item>();
-  @Output() onException = new EventEmitter<any>();
+  websocketMessageRecivedSubscriber:Subscription;
+  websocketMessageSendingSubscriber:Subscription;
 
-
-  constructor(private itemsService:ItemsService){
+  constructor(private messageService:MessageService){
     this.model = new Item();
     this.submitted = false;
+
+    this.subscription_httpServiceRequest = this.messageService.getSubscription(ObservableType.HTTP_SERVICE_REQUEST).share().subscribe(message=>{
+      console.log("HTTP_SERVICE_REQUEST", message);
+    });
+
+    this.subscription_httpServiceResponse = this.messageService.getSubscription(ObservableType.HTTP_SERVICE_RESPONSE).share().subscribe(message=>{
+      console.log("HTTP_SERVICE_RESPONSE", message);
+      this.onHttpServiceResponse(message);
+    });
+
+    this.websocketMessageSendingSubscriber = this.messageService.getSubscription(ObservableType.WEB_SOCKET_MESSAGE_SENDING).share().subscribe(message=>{
+      console.log("WEB_SOCKET_MESSAGE_SENDING", message);
+    });
+
+
+    this.websocketMessageRecivedSubscriber = this.messageService.getSubscription(ObservableType.WEB_SOCKET_MESSAGE_RECEIVED).share().subscribe(message=>{
+      console.log("WEB_SOCKET_MESSAGE_RECEIVED", message);
+    });
+
+  }
+
+  onHttpServiceResponse(msg){
+    console.info("onHttpServiceResponse", msg);
+
+    switch(msg.type){
+
+      case "onItemReceived":{
+        this.onSelected(msg.data);
+      }break;
+
+      //TODO:clear the current info if the removed item correspond to the currently edited one.
+      // case "onItemDeleted":{}break;
+
+      default:{
+        console.warn("default case triggered for message ", msg.type, msg);
+      }break;
+    }
+
   }
 
   onSubmit(){
     this.submitted = true;
 
     if(this.isUpdate){
-      this.itemsService.updateItem(this.model)
-        .then((item)=>{
-          console.log("updated", item);
-          this.onItemAdded.emit(item);
-      })
-        .catch(error=>{
-          console.error(error);
-      })
+
+      this.messageService.dispatchHttpServiceRequest({
+        type:"updateItem",
+        data:this.model
+      });
+
     }
     else{
-      this.itemsService.addItem(this.model).then((item)=>{
-        console.log("added",item);
-        this.onItemAdded.emit(item);
-        this.resetForm();
-      })
-        .catch(error=>{
-          this.onException.emit(error);
-        })
+
+      this.messageService.dispatchHttpServiceRequest({
+        type:"addItem",
+        data:this.model
+      });
+
 
     }
   }
@@ -64,6 +98,7 @@ export class ItemFormComponent {
     this.model = new Item(selectedItem);
     this.idAtSelectionTime = this.model.id;
     this.isUpdate = true;
+    this.setEditMode();
   }
 
   onDevModeToggle(devMode:boolean){
@@ -72,7 +107,6 @@ export class ItemFormComponent {
 
   public onLockToggle(event){
     this.lockId = !this.lockId;
-    // this.isUpdate = !this.lockId;
   }
 
   onKeyUp(event, isId:boolean=false){
@@ -82,13 +116,35 @@ export class ItemFormComponent {
 
     if(typeof this.idAtSelectionTime !== "undefined"){
       this.isUpdate = this.model.id == this.idAtSelectionTime;
+      this.setEditMode();
     }
+
+  }
+
+  setEditMode(){
+    console.error("edit mode", this.isUpdate, this.idAtSelectionTime, this.model.id);
+
+    if(this.isUpdate == true){
+      this.messageService.dispatchWSSendMsg({
+        type:"onEditItemStarted",
+        // data:this.model
+        itemId:this.idAtSelectionTime ? this.idAtSelectionTime : this.model.id
+      });
+    }
+    else{
+      this.messageService.dispatchWSSendMsg({
+        type:"onEditItemEnded",
+        itemId:this.idAtSelectionTime ? this.idAtSelectionTime : this.model.id
+      });
+    }
+
 
   }
 
   resetForm(){
     this.model = new Item();
     this.isUpdate = false;
+    this.setEditMode();
   }
 
 

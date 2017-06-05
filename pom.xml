@@ -83,6 +83,12 @@
             <version>2.8.0</version>
         </dependency>
 
+        <!--websockets-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
 
     </dependencies>
 

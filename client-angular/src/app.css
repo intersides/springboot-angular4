@@ -50,4 +50,18 @@ code {
 .description {
   font-weight: 800; }
 
+.itemCard[data-editlock="true"] {
+  background-color: rgba(211, 211, 211, 0.19); }
+  .itemCard[data-editlock="true"] button {
+    opacity: .5; }
+
+.in-editing-message {
+  text-align: right;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 10px;
+  font-size: small;
+  color: deepskyblue; }
+
 /*# sourceMappingURL=app.css.map */

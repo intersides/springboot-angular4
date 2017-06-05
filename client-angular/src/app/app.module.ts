@@ -9,7 +9,8 @@ import { MdButtonModule, MdCardModule, MdMenuModule, MdToolbarModule, MdIconModu
 
 import { AppComponent }  from './app.component';
 import { ItemFormComponent }  from './item-add-component';
-import { ItemsService} from './items.service'
+import { ItemsService} from './items.service';
+import { MessageService} from './MessageService';
 import { SnackBarMessageComponent} from "./common/snack-bar-component";
 
 
@@ -22,7 +23,7 @@ import { SnackBarMessageComponent} from "./common/snack-bar-component";
     //materials modules
     MdButtonModule, MdCardModule, MdMenuModule, MdToolbarModule, MdIconModule, MdSlideToggleModule, MdInputModule, MdGridListModule, MdListModule, MdSnackBarModule
   ],
-  providers: [ItemsService],
+  providers: [ItemsService, MessageService],
   declarations: [ AppComponent, ItemFormComponent, SnackBarMessageComponent ],
   bootstrap:    [ AppComponent],
   entryComponents: [SnackBarMessageComponent]
